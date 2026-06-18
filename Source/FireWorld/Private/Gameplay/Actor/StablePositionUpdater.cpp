@@ -38,8 +38,8 @@ void UStablePositionUpdater::BeginPlay()
 		return;
 	}
 
-	if (GameInstance.Get()->FWSaveGame->SavedActorTransforms.Contains(SavePositionName))
-		StablePosition = GameInstance.Get()->FWSaveGame->SavedActorTransforms[SavePositionName];
+	if (GameInstance.Get()->CurrentLoadedSave->SavedActorTransforms.Contains(SavePositionName))
+		StablePosition = GameInstance.Get()->CurrentLoadedSave->SavedActorTransforms[SavePositionName];
 }
 
 void UStablePositionUpdater::Activate(bool bReset)
@@ -65,7 +65,7 @@ void UStablePositionUpdater::TickComponent(float DeltaTime, ELevelTick TickType,
 				{
 					StablePosition = Owner.Get()->GetActorTransform();
 
-					GameInstance.Get()->FWSaveGame->SavedActorTransforms.Add(SavePositionName, StablePosition);
+					GameInstance.Get()->CurrentLoadedSave->SavedActorTransforms.Add(SavePositionName, StablePosition);
 					GameInstance.Get()->SaveGame();
 				}
 			}

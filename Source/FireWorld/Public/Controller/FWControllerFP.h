@@ -18,19 +18,19 @@ class FIREWORLD_API AFWControllerFP : public APlayerController
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
-	TObjectPtr<UInputAction> JumpAction;
+	TObjectPtr<UInputAction> JumpAction = nullptr;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
-	TObjectPtr<UInputAction> MoveAction;
+	TObjectPtr<UInputAction> MoveAction = nullptr;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
-	TObjectPtr<UInputAction> LookAction;
+	TObjectPtr<UInputAction> LookAction = nullptr;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
-	TObjectPtr<UInputAction> SprintAction;
+	TObjectPtr<UInputAction> SprintAction = nullptr;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
-	TObjectPtr<UInputAction> CrouchAction;
+	TObjectPtr<UInputAction> CrouchAction = nullptr;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
 	TObjectPtr<UInputMappingContext> InputMappingComponent = nullptr;

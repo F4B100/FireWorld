@@ -61,7 +61,7 @@ UFWCharacterMovementComponent::FNetworkPredictionData_Client_FW::FNetworkPredict
 
 FSavedMovePtr UFWCharacterMovementComponent::FNetworkPredictionData_Client_FW::AllocateNewMove()
 {
-	return FSavedMovePtr(new FSavedMove_FW);
+	return MakeShared<FSavedMove_FW>();
 }
 
 UFWCharacterMovementComponent::UFWCharacterMovementComponent()
@@ -93,8 +93,19 @@ void UFWCharacterMovementComponent::SprintReleassed()
 	bSafeWantsToSprint = false;
 }
 
+void UFWCharacterMovementComponent::CalcVelocity(float DeltaTime, float Friction, bool bFluid,
+	float BrakingDeceleration)
+{
+	Super::CalcVelocity(DeltaTime, Friction, bFluid, BrakingDeceleration);
+}
+
+void UFWCharacterMovementComponent::PhysWalking(float deltaTime, int32 Iterations)
+{	
+	Super::PhysWalking(deltaTime, Iterations);
+}
+
 void UFWCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation,
-	const FVector& OldVelocity)
+                                                      const FVector& OldVelocity)
 {
 	Super::OnMovementUpdated(DeltaSeconds, OldLocation, OldVelocity);
 

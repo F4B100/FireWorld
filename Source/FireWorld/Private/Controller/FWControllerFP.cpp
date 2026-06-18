@@ -5,6 +5,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Character/FWCharacterFP.h"
+#include "UserSettings/EnhancedInputUserSettings.h"
 
 
 // Sets default values
@@ -112,6 +113,16 @@ void AFWControllerFP::SetupInputComponent()
 	{
 		UEnhancedInputLocalPlayerSubsystem* InputSubsystem =
 			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+
+		if (InputSubsystem != nullptr)
+		{
+			if (
+				UEnhancedInputUserSettings* UserSettings = InputSubsystem->GetUserSettings();
+				!UserSettings->IsMappingContextRegistered(InputMappingComponent)
+			) {
+				UserSettings->RegisterInputMappingContext(InputMappingComponent);
+			}
+		}
 
 		if (InputSubsystem && InputMappingComponent)
 		{

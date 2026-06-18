@@ -41,8 +41,8 @@ void AFWCharacterFP::BeginDestroy()
 
 	if (GameInstance)
 	{
-		GameInstance->FWSaveGame->PlayerLevel = Level;
-		GameInstance->FWSaveGame->bHasSavedLevel = true;
+		GameInstance->CurrentLoadedSave->PlayerLevel = Level;
+		GameInstance->CurrentLoadedSave->bHasSavedLevel = true;
 		
 		GameInstance->SaveGame();
 	}
@@ -76,7 +76,7 @@ void AFWCharacterFP::SprintPressed() const
 
 void AFWCharacterFP::SprintReleased() const
 {
-	FWMovementComponent->SprintReleassed();
+	FWMovementComponent->SprintReleased();
 }
 
 void AFWCharacterFP::Tick(float DeltaTime)

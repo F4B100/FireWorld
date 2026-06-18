@@ -14,13 +14,15 @@ public class FireWorld : ModuleRules
 			"Engine",
 			"InputCore",
 			"EnhancedInput",
-			"UMG"
+			"UMG",
+			"CommonUI"
 		]);
 
 		PrivateDependencyModuleNames.AddRange([
 			"Slate",
 			"SlateCore",
-			"OnlineSubsystem"
+			"OnlineSubsystem",
+			"UMGEditor"
 		]);
 		
 		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true

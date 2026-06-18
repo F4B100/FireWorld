@@ -71,9 +71,12 @@ public:
 	void SprintPressed();
 	UFUNCTION(BlueprintCallable)
 	void SprintReleassed();
-	
-	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
-	
+
+	virtual void CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration) override;
+
 protected:
+	virtual void PhysWalking(float deltaTime, int32 Iterations) override;
+
 	virtual void UpdateFromCompressedFlags(uint8 Flags) override;
+	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
 };
