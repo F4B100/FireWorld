@@ -76,7 +76,7 @@ void AFWCharacterFP::SprintPressed() const
 
 void AFWCharacterFP::SprintReleased() const
 {
-	FWMovementComponent->SprintReleased();
+	FWMovementComponent->SprintReleassed();
 }
 
 void AFWCharacterFP::Tick(float DeltaTime)

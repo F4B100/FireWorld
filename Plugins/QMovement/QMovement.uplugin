@@ -1,0 +1,30 @@
+{
+	"FileVersion": 3,
+	"Version": 2,
+	"VersionName": "1.1",
+	"FriendlyName": "QMovement",
+	"Description": "High-fidelity GoldSrc/Quake movement physics for Unreal Engine 5. Fully data-driven implementation of Bunnyhop, Air-Strafing, Surf, and specialized Crouch-Jump mechanics with 100% source-code accuracy.",
+	"Category": "Gameplay",
+	"CreatedBy": "MrKamkar",
+	"CreatedByURL": "https://github.com/MrKamkar",
+	"DocsURL": "https://github.com/MrKamkar/BH_Quake",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/MrKamkar/BH_Quake/issues",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "QMovement",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "EnhancedInput",
+			"Enabled": true
+		}
+	]
+}
