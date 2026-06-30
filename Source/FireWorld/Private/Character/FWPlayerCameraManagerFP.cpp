@@ -40,6 +40,26 @@ void AFWPlayerCameraManagerFP::UpdateViewTarget(FTViewTarget& OutVT, float Delta
 		{
 			CrouchInterpolateTime = FMath::Clamp(CrouchInterpolateTime - DeltaTime, 0.0, CrouchInterpolateDuration);
 		}
+		if (MovementComponent->IsMovingOnGround())
+		{
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(13123131, 1.0f, FColor::Yellow, FString::Printf(TEXT("ViewBoobingInterpolateTime: %f\n"), ViewBoobingInterpolateTime));
+			}
+			Offset.Z += FMath::InterpEaseInOut(
+				Offset.Z,
+				Offset.Z + ViewBoobingMagntude,
+				FMath::Sin(ViewBoobingInterpolateTime),
+				1.5f);
+			ViewBoobingInterpolateTime += DeltaTime;
+			if (ViewBoobingInterpolateTime > PI)
+			{
+				ViewBoobingInterpolateTime = 0.0f;
+			}
+		} else
+		{
+			ViewBoobingInterpolateTime = 0.0f;
+		}
 
 		if (MovementComponent->IsMovingOnGround())
 		{

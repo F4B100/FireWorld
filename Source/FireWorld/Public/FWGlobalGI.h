@@ -8,6 +8,7 @@
 
 class UFWSaveNames;
 class UFWSaveGame;
+class UFWUserSettings;
 /**
  * 
  */
@@ -22,6 +23,8 @@ public:
 	TObjectPtr<UFWSaveGame> CurrentLoadedSave = nullptr;
 	UPROPERTY(BlueprintReadOnly, Category=Save)
 	FString LoadedSaveName = FString("");
+	UPROPERTY(BlueprintReadOnly, Category=Save)
+	TObjectPtr<UFWUserSettings> UserSettings = nullptr;
 	
 	UFWGlobalGI();
 

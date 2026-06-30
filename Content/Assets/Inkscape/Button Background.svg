@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   sodipodi:docname="Button Background.svg"
+   inkscape:export-filename="ButtonBackground.png"
+   inkscape:export-xdpi="93.75"
+   inkscape:export-ydpi="93.75"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="226.27417"
+     inkscape:cy="333.7544"
+     inkscape:window-width="2560"
+     inkscape:window-height="1494"
+     inkscape:window-x="-28160"
+     inkscape:window-y="-32000"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#00feff;stop-opacity:1;"
+         offset="0.17741935"
+         id="stop1" />
+      <stop
+         style="stop-color:#35ca8d;stop-opacity:1;"
+         offset="1"
+         id="stop2" />
+    </linearGradient>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="radialGradient2"
+       cx="256.06488"
+       cy="256.03687"
+       fx="256.06488"
+       fy="256.03687"
+       r="256.02197"
+       gradientTransform="matrix(1,0,0,0.99992967,0,0.01800642)"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="stroke-width:4;stroke:#000000;fill:url(#radialGradient2);"
+       id="rect1"
+       width="502.04395"
+       height="502.00793"
+       x="5.0429091"
+       y="5.0328999"
+       ry="40.567493" />
+  </g>
+</svg>

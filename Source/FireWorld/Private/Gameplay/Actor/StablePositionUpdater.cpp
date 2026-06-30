@@ -37,9 +37,11 @@ void UStablePositionUpdater::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("StablePositionUpdater::BeginPlay: GameInstance could not be set."));
 		return;
 	}
-
-	if (GameInstance.Get()->CurrentLoadedSave->SavedActorTransforms.Contains(SavePositionName))
-		StablePosition = GameInstance.Get()->CurrentLoadedSave->SavedActorTransforms[SavePositionName];
+	if (GameInstance.Get()->CurrentLoadedSave)
+	{
+		if (GameInstance.Get()->CurrentLoadedSave->SavedActorTransforms.Contains(SavePositionName))
+			StablePosition = GameInstance.Get()->CurrentLoadedSave->SavedActorTransforms[SavePositionName];
+	}
 }
 
 void UStablePositionUpdater::Activate(bool bReset)

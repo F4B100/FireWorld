@@ -6,6 +6,7 @@
 #include "Camera/PlayerCameraManager.h"
 #include "FWPlayerCameraManagerFP.generated.h"
 
+class AFWCharacterFP;
 /**
  * 
  */
@@ -16,9 +17,15 @@ class FIREWORLD_API AFWPlayerCameraManagerFP : public APlayerCameraManager
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float CrouchInterpolateDuration = 0.2f;
+	float CrouchInterpolateDuration = 0.2f;;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ViewBoobingMagntude = 5.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ViewBoobingSpeed = 1.5f;
+
 	float CrouchInterpolateTime = 0.0f;
-	
+	float ViewBoobingInterpolateTime = 0.0f;
+
 	AFWPlayerCameraManagerFP();
 	
 	virtual void UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime) override;

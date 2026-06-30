@@ -6,6 +6,10 @@
 #include "CommonUserWidget.h"
 #include "FWGraphicsSettings.generated.h"
 
+class UAnalogSlider;
+class UTextBlock;
+class UEditableText;
+class UFWUserSettings;
 class UComboBoxKey;
 class UComboBoxString;
 /**
@@ -19,8 +23,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UComboBoxKey> ScreenResDropdown = nullptr;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<UAnalogSlider> FrameRateSlider = nullptr;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
-	TObjectPtr<UGameUserSettings> GameUserSettings = nullptr;
+	TObjectPtr<UFWUserSettings> GameUserSettings = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	TMap<FName, FIntPoint> Resolutions = TMap<FName, FIntPoint>();
@@ -50,7 +57,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Graphics Options")
 	void ConfirmGameUserSettings(bool bOverrideCommandLine);
 
+	UFUNCTION(Blueprintable)
+	void UpdateFrameRateLimitValue(float NewValue);
+
 protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
+
+public:
+	virtual void BeginDestroy() override;
 };

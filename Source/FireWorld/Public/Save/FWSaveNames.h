@@ -12,9 +12,8 @@
 UCLASS()
 class FIREWORLD_API UFWSaveNames : public USaveGame
 {
+	GENERATED_BODY()
 	public:
 	UPROPERTY(BlueprintReadOnly, Category = "Save")
 	TSet<FString> SaveNames;
-	private:
-	GENERATED_BODY()
 };

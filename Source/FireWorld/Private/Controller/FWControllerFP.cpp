@@ -28,6 +28,23 @@ void AFWControllerFP::OnPossess(APawn* APawn)
 	FWCharacter = Cast<AFWCharacterFP>(APawn);
 }
 
+void AFWControllerFP::StartShooting(const FInputActionValue& InputActionValue)
+{
+	if (FWCharacter)
+	{
+		FWCharacter->Fire();
+	}
+}
+
+void AFWControllerFP::StopShooting(const FInputActionValue& InputActionValue)
+{
+	if (FWCharacter)
+	{
+		FWCharacter->StopFire();
+	}
+}
+
+
 void AFWControllerFP::SprintDown()
 {
 	if (FWCharacter)
@@ -46,11 +63,11 @@ void AFWControllerFP::SprintUp()
 
 void AFWControllerFP::HandleCrouch(const FInputActionValue& InputActionValue)
 {
-	const float CrouchPress = InputActionValue.Get<float>();
 	if (!FWCharacter)
 	{
 		return;
 	}
+	const float CrouchPress = InputActionValue.Get<float>();
 	if (!FWCharacter->bIsCrouched && CrouchPress > 0.5f)
 	{
 		FWCharacter->Crouch();
@@ -103,9 +120,6 @@ void AFWControllerFP::AcknowledgePossession(APawn* P)
 void AFWControllerFP::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	
-	if(GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Input component"));	
 
 	EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 
@@ -116,8 +130,9 @@ void AFWControllerFP::SetupInputComponent()
 
 		if (InputSubsystem != nullptr)
 		{
+			UEnhancedInputUserSettings* UserSettings = InputSubsystem->GetUserSettings();
 			if (
-				UEnhancedInputUserSettings* UserSettings = InputSubsystem->GetUserSettings();
+				UserSettings &&
 				!UserSettings->IsMappingContextRegistered(InputMappingComponent)
 			) {
 				UserSettings->RegisterInputMappingContext(InputMappingComponent);
@@ -157,6 +172,13 @@ void AFWControllerFP::SetupInputComponent()
 		if (LookAction)
 		{
 			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFWControllerFP::HandleLook);
+		}
+
+		if (ShootAction)
+		{
+
+			EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AFWControllerFP::StartShooting);
+			EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &AFWControllerFP::StopShooting);
 		}
 	}
 }

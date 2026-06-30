@@ -38,4 +38,10 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION(BlueprintCallable, Category = Health)
+	void DoDamage(float Damage);
+	UFUNCTION(BlueprintCallable, Category = Health)
+	void RestoreHealth(float HealthToRestore);
+
 };

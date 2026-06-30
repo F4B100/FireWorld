@@ -37,3 +37,13 @@ void UPlayerStatsComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Stamina = uba::Min(Stamina + StaminaRegenRate * DeltaTime, MaxStamina);
 }
 
+void UPlayerStatsComponent::DoDamage(float Damage)
+{
+	Health = uba::Max(Health - Damage, 0.0f);
+}
+
+void UPlayerStatsComponent::RestoreHealth(float HealthToRestore)
+{
+	Health = uba::Min(Health + HealthToRestore, MaxHealth);
+}
+

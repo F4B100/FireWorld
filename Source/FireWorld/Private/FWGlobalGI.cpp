@@ -5,6 +5,7 @@
 
 #include "Save/FWSaveGame.h"
 #include "Save/FWSaveNames.h"
+#include "Save/FWUserSettings.h"
 
 UFWGlobalGI::UFWGlobalGI()
 {
