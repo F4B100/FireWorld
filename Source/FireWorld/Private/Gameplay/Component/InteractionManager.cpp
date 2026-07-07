@@ -3,8 +3,11 @@
 
 #include "Gameplay/Component/InteractionManager.h"
 
+#include "TimerManager.h"
 #include "Character/FWCharacter.h"
-#include "Gameplay/InteractibleActor.h"
+#include "Engine/Engine.h"
+#include "Engine/World.h"
+#include "Gameplay/Interactible/InteractibleActor.h"
 
 
 UInteractionManager::UInteractionManager()

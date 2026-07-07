@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Controller.h"
+#include "GameFramework/PlayerController.h"
 #include "FWController.generated.h"
 
+class UEnhancedInputComponent;
 class AFWCharacterHUD;
 struct FInputActionValue;
 class AFWCharacter;

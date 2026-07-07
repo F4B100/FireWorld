@@ -6,7 +6,7 @@
 #include "Character/FWCharacter.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
-#include "Gameplay/InteractibleActor.h"
+#include "Gameplay/Interactible/InteractibleActor.h"
 #include "Gameplay/Component/InteractionManager.h"
 
 void UFWPlayerInteractionWidget::NativePreConstruct()

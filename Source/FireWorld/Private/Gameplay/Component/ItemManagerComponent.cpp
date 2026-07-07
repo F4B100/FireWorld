@@ -4,8 +4,10 @@
 
 #include "FWGlobalGI.h"
 #include "Character/FWCharacter.h"
+#include "Engine/World.h"
 #include "Gameplay/Items/FWItem.h"
 #include "Save/FWSaveGame.h"
+#include "Serialization/MemoryReader.h"
 
 UItemManagerComponent::UItemManagerComponent()
 {
@@ -41,7 +43,7 @@ void UItemManagerComponent::CollectItem(UFWItem *NewItem)
 
 void UItemManagerComponent::SaveInventory(FSavedInventory& Inventory)
 {
-	for (const auto I : Items)
+	for (const TObjectPtr<UFWItem>& I : Items)
 	{
 		FSavedItem& Item = Inventory.Items.Emplace_GetRef();
 		I->CreateSavedItem(Item);
