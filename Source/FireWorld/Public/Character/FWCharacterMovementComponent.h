@@ -6,7 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "FWCharacterMovementComponent.generated.h"
 
-class AFWCharacterFP;
+class AFWCharacter;
 
 UENUM(BlueprintType)
 enum FWCharacterMovementMode
@@ -97,7 +97,7 @@ class FIREWORLD_API UFWCharacterMovementComponent : public UCharacterMovementCom
 	float Slide_Friction = 1.3f;
 
 	UPROPERTY(Transient)
-	TObjectPtr<AFWCharacterFP> FWCharacterOwner;
+	TObjectPtr<AFWCharacter> FWCharacterOwner;
 
 	bool Safe_bWantsToSprint;
 	bool Safe_bPrevWantsToCrouch;

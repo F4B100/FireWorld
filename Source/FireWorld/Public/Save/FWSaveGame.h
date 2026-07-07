@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
-#include "Kismet/GameplayStatics.h"
+#include "Gameplay/Component/SavedInventory.h"
 #include "FWSaveGame.generated.h"
 
 /**
@@ -25,7 +25,7 @@ public:
 	FString PlayerLevel = FString();
 	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
 	bool bHasSavedLevel = false;
-	
-	UPROPERTY(BlueprintReadOnly, Category = "Player Inventory")
-	TMap<FString, FString> PlayerInventory = TMap<FString, FString>();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
+	FSavedInventory SavedInventory = FSavedInventory();
 };

@@ -6,7 +6,7 @@
 #include "Camera/PlayerCameraManager.h"
 #include "FWPlayerCameraManagerFP.generated.h"
 
-class AFWCharacterFP;
+class AFWCharacter;
 /**
  * 
  */

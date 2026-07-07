@@ -3,7 +3,7 @@
 
 #include "Character/FWPlayerCameraManagerFP.h"
 
-#include "Character/FWCharacterFP.h"
+#include "Character/FWCharacter.h"
 #include "Character/FWCharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -14,7 +14,7 @@ AFWPlayerCameraManagerFP::AFWPlayerCameraManagerFP()
 void AFWPlayerCameraManagerFP::UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime)
 {
 	Super::UpdateViewTarget(OutVT, DeltaTime);
-	if (AFWCharacterFP *CharacterFP = Cast<AFWCharacterFP>(GetOwningPlayerController()->GetCharacter()))
+	if (AFWCharacter *CharacterFP = Cast<AFWCharacter>(GetOwningPlayerController()->GetCharacter()))
 	{
 		UFWCharacterMovementComponent *MovementComponent = CharacterFP->GetFWMovementComponent();
 		FVector TargetCrouchOffset = FVector(

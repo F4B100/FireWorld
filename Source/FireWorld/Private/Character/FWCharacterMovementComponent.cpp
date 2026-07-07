@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "Character/FWCharacterFP.h"
+#include "Character/FWCharacter.h"
 #include "Components/CapsuleComponent.h"
 
 void UFWCharacterMovementComponent::FSavedMove_FW::Clear()
@@ -104,7 +104,7 @@ void UFWCharacterMovementComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
 
-	FWCharacterOwner = Cast<AFWCharacterFP>(GetOwner());
+	FWCharacterOwner = Cast<AFWCharacter>(GetOwner());
 }
 
 bool UFWCharacterMovementComponent::IsCustomMovementMode(FWCharacterMovementMode InMovementMode) const

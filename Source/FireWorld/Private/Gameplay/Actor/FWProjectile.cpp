@@ -3,7 +3,7 @@
 
 #include "Gameplay/Actor/FWProjectile.h"
 
-#include "Character/FWCharacterFP.h"
+#include "Character/FWCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -74,7 +74,7 @@ void AFWProjectile::BeginPlay()
 		{
 			CollisionComponent->IgnoreActorWhenMoving(Component, true);
 		}
-		if (AFWCharacterFP* Character = Cast<AFWCharacterFP>(GetInstigator()))
+		if (AFWCharacter* Character = Cast<AFWCharacter>(GetInstigator()))
 		{
 			Character->GetCapsuleComponent()->IgnoreActorWhenMoving(this, true);
 		}
