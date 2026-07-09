@@ -4,6 +4,10 @@
 #include "Gameplay/Component/WeaponManager.h"
 
 #include "FWGlobalGI.h"
+#include "Character/FWCharacter.h"
+#include "Engine/Engine.h"
+#include "Engine/World.h"
+#include "Gameplay/Component/ItemManagerComponent.h"
 #include "Gameplay/Items/Weapon.h"
 
 
@@ -32,6 +36,25 @@ void UWeaponManager::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ItemManager = Cast<AFWCharacter>(GetOwner())->GetItemManager();
+	if (ItemManager)
+	{
+		ItemManager->OnItemRemoved.AddUObject(
+			this,
+			&UWeaponManager::HandleItemRemoved
+		);
+
+		ItemManager->OnItemAdded.AddUObject(
+			this,
+			&UWeaponManager::HandleItemAdded
+		);
+
+		ItemManager->OnItemMoved.AddUObject(
+			this,
+			&UWeaponManager::HandleItemChanged
+		);
+	}
+
 	FWGameInstance = Cast<UFWGlobalGI>(GetWorld()->GetGameInstance());
 	if (FWGameInstance)
 	{
@@ -42,16 +65,43 @@ void UWeaponManager::BeginPlay()
 	}
 }
 
+void UWeaponManager::HandleItemRemoved(UFWItem* Item, int32 Index)
+{
+	if (CurrentWeapon == Item)
+	{
+		CurrentWeapon = nullptr;
+	}
+}
+
+void UWeaponManager::HandleItemAdded(UFWItem* Item, int32 Index)
+{
+	if (!CurrentWeapon && Item->GetClass()->IsChildOf(UWeapon::StaticClass()))
+	{
+		CurrentWeapon = Cast<UWeapon>(Item);
+	}
+}
+
+void UWeaponManager::HandleItemChanged(int32 Old, int32 New)
+{
+
+}
 
 void UWeaponManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (GEngine)
+	{
+		if (CurrentWeapon)
+		{
+			GEngine->AddOnScreenDebugMessage(2141278976, 10.0f, FColor::Black, CurrentWeapon->GetName());
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(2141278976, 10.0f, FColor::Black, "No Weapon Equiped");
+		}
+	}
 	if (CurrentWeapon)
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(13141412, 10.0f, FColor::Black, CurrentWeapon->GetName());
-		}
 		CurrentWeapon->TickWeapon(DeltaTime);
 	}
 }

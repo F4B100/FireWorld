@@ -4,17 +4,18 @@
 #include "Gameplay/Interactible/HealthPack.h"
 
 #include "Character/FWCharacter.h"
+#include "Engine/Engine.h"
 
 
 AHealthPack::AHealthPack()
 {
 }
 
-void AHealthPack::InteractibleInFocus(ACharacter* Interactee)
+void AHealthPack::InteractableInFocus(AFWCharacter* Interactee)
 {
 }
 
-void AHealthPack::InteractibleOutOfFocus(ACharacter* Interactee)
+void AHealthPack::InteractableOutOfFocus(AFWCharacter* Interactee)
 {
 }
 
@@ -26,7 +27,7 @@ void AHealthPack::Interact(AFWCharacter* Interactee)
 	}
 }
 
-FText AHealthPack::GetInteractibleActorName()
+FText AHealthPack::GetInteractableActorName()
 {
 	return Name;
 }

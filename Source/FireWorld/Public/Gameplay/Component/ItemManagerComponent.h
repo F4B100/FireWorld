@@ -30,6 +30,14 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<TObjectPtr<UFWItem>> Items;
 
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAdded, UFWItem*, int32);
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemRemoved, UFWItem*, int32);
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemMoved, int32 /*From*/, int32 /*To*/);
+
+	FOnItemAdded OnItemAdded;
+	FOnItemRemoved OnItemRemoved;
+	FOnItemMoved OnItemMoved;
+
 	UFUNCTION(BlueprintCallable)
 	void CollectItem(UFWItem *NewItem);
 

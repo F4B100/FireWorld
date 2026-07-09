@@ -38,9 +38,9 @@ void UFWPlayerInteractionWidget::UpdateText() const
 {
 	if (CurrentInteractible)
 	{
-		IInteractibleActor *InteractibleActor = Cast<IInteractibleActor>(CurrentInteractible);
+		IInteractableActor *InteractibleActor = Cast<IInteractableActor>(CurrentInteractible);
 		InteractibleKey->SetText(FText::FromString(TEXT("E")));
-		InteractibleText->SetText(InteractibleActor->GetInteractibleActorName());
+		InteractibleText->SetText(InteractibleActor->GetInteractableActorName());
 		ContentSizeBox->SetVisibility(ESlateVisibility::Visible);
 	}
 	else

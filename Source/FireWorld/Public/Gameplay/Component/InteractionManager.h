@@ -10,7 +10,7 @@
 class AFWCharacter;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class FIREWORLD_API UInteractionManager : public UActorComponent
+class FIREWORLD_API UInteractionManagerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -24,7 +24,7 @@ class FIREWORLD_API UInteractionManager : public UActorComponent
 	TEnumAsByte<ECollisionChannel> TraceChannelProperty = ECC_Pawn;
 
 public:
-	UInteractionManager();
+	UInteractionManagerComponent();
 
 	TObjectPtr<AActor> GetCurrentInteractible() {return CurrentInteractible;}
 	TObjectPtr<AActor> GetLastObjectSeen() {return LastObjectSeen;}

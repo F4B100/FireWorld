@@ -23,10 +23,10 @@ AFWCharacter::AFWCharacter(FObjectInitializer const &ObjectInitializer)
 	FWMovementComponent = Cast<UFWCharacterMovementComponent>(Super::GetMovementComponent());
 	PlayerStats = CreateDefaultSubobject<UPlayerStatsComponent>(TEXT("PlayerStatsManager"));
 	StablePositionUpdater = CreateDefaultSubobject<UStablePositionUpdater>(TEXT("StablePosition"));
-	ItemInventory = CreateDefaultSubobject<UItemManagerComponent>(TEXT("InventoryManager"));
+	ItemManager = CreateDefaultSubobject<UItemManagerComponent>(TEXT("ItemManager"));
 	KeyInventory = CreateDefaultSubobject<UKeyInventoryComponent>(TEXT("KeyManager"));
 	WeaponManager = CreateDefaultSubobject<UWeaponManager>(TEXT("WeaponManager"));
-	InteractionManager = CreateDefaultSubobject<UInteractionManager>(TEXT("InteractionManager"));
+	InteractionManager = CreateDefaultSubobject<UInteractionManagerComponent>(TEXT("InteractionManager"));
 
 	GetCharacterMovement()->SetIsReplicated(true);
 	bReplicates = true;
@@ -118,9 +118,9 @@ float AFWCharacter::TakeDamage(float Damage, const FDamageEvent& DamageEvent, AC
 void AFWCharacter::Interact()
 {
 	AActor * CurrentInteractible = InteractionManager.Get()->GetCurrentInteractible();
-	if (CurrentInteractible && CurrentInteractible->Implements<UInteractibleActor>())
+	if (CurrentInteractible && CurrentInteractible->Implements<UInteractableActor>())
 	{
-		IInteractibleActor *Interactible = Cast<IInteractibleActor>(CurrentInteractible);
+		IInteractableActor *Interactible = Cast<IInteractableActor>(CurrentInteractible);
 		Interactible->Interact(this);
 	}
 }

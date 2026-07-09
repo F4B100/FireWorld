@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "FWCharacter.generated.h"
 
-class UInteractionManager;
+class UInteractionManagerComponent;
 class AFWController;
 class UWeaponManager;
 class UKeyInventoryComponent;
@@ -35,20 +35,40 @@ public:
 
 
 	//=========================Components=========================
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Movement)
+	UPROPERTY(EditDefaultsOnly, Category=Movement)
 	TObjectPtr<UFWCharacterMovementComponent> FWMovementComponent = nullptr;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UFUNCTION(BlueprintCallable)
+	UFWCharacterMovementComponent *GetFWMovementComponent() {return FWMovementComponent;}
+
+	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UPlayerStatsComponent> PlayerStats = nullptr;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UFUNCTION(BlueprintCallable)
+	UPlayerStatsComponent *GetPlayerStats() {return PlayerStats;}
+
+	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UStablePositionUpdater> StablePositionUpdater = nullptr;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UItemManagerComponent> ItemInventory = nullptr;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UFUNCTION(BlueprintCallable)
+	UStablePositionUpdater *GetStablePositionUpdater() {return StablePositionUpdater;}
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UItemManagerComponent> ItemManager = nullptr;
+	UFUNCTION(BlueprintCallable)
+	UItemManagerComponent *GetItemManager() {return ItemManager;}
+
+	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UKeyInventoryComponent> KeyInventory = nullptr;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UFUNCTION(BlueprintCallable)
+	UKeyInventoryComponent *GetKeyInventory() {return KeyInventory;}
+
+	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UWeaponManager> WeaponManager = nullptr;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UInteractionManager> InteractionManager = nullptr;
+	UFUNCTION(BlueprintCallable)
+	UWeaponManager *GetWeaponManager() {return WeaponManager;}
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UInteractionManagerComponent> InteractionManager = nullptr;
+	UFUNCTION(BlueprintCallable)
+	UInteractionManagerComponent *GetInteractionManager() {return InteractionManager;}
 	//============================================================
 	FString Level = FString("");
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Options)
@@ -64,8 +84,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void StopFire();
 
-	TObjectPtr<UFWCharacterMovementComponent> GetFWMovementComponent() {return FWMovementComponent;}
-	
 	virtual void AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce = false) override;
 
 	virtual void BeginPlay() override;
@@ -75,8 +93,6 @@ public:
 	virtual void BeginDestroy() override;
 
 	FCollisionQueryParams GetIgnoreCharacterParams();
-	UFUNCTION(BlueprintCallable)
-	UInteractionManager *GetInteractionManager() {return InteractionManager;}
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void LaunchCharacterServer(FVector LaunchVelocity, bool bXYOverride, bool bZOverride);

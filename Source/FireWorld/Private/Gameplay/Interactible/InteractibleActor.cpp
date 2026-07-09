@@ -4,20 +4,20 @@
 #include "Gameplay/Interactible/InteractibleActor.h"
 
 
-// Add default functionality here for any IInteractibleActor functions that are not pure virtual.
-void IInteractibleActor::InteractibleInFocus(ACharacter* Interactee)
+// Add default functionality here for any IInteractableActor functions that are not pure virtual.
+void IInteractableActor::InteractableInFocus(AFWCharacter* Interactee)
 {
 }
 
-void IInteractibleActor::InteractibleOutOfFocus(ACharacter* Interactee)
+void IInteractableActor::InteractableOutOfFocus(AFWCharacter* Interactee)
 {
 }
 
-void IInteractibleActor::Interact(AFWCharacter* Interactee)
+void IInteractableActor::Interact(AFWCharacter* Interactee)
 {
 }
 
-FText IInteractibleActor::GetInteractibleActorName()
+FText IInteractableActor::GetInteractableActorName()
 {
 	return FText::FromString(TEXT("Default interactible\n"));
 }

@@ -7,7 +7,7 @@
 #include "UI/FWCharacterUI/FWCharacterWidget.h"
 #include "FWCharacterHUD.generated.h"
 
-class UInteractibleActor;
+class UInteractableActor;
 class AFWController;
 class UFWCharacterWidget;
 class UCommonUserWidget;

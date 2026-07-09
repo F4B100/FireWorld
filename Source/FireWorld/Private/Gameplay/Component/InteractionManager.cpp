@@ -10,13 +10,13 @@
 #include "Gameplay/Interactible/InteractibleActor.h"
 
 
-UInteractionManager::UInteractionManager()
+UInteractionManagerComponent::UInteractionManagerComponent()
 {
 	Owner = Cast<AFWCharacter>(GetOwner());
 }
 
 
-void UInteractionManager::BeginPlay()
+void UInteractionManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -28,14 +28,14 @@ void UInteractionManager::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle_CheckForInteractible, Delegate, 0.05f, true);
 }
 
-void UInteractionManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void UInteractionManagerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }
 
-void UInteractionManager::CheckForInteractible()
+void UInteractionManagerComponent::CheckForInteractible()
 {
 	FRotator Rotation = FMath::DegreesToRadians(Owner.Get()->GetControlRotation());
 
@@ -60,7 +60,7 @@ void UInteractionManager::CheckForInteractible()
 	if (Hit.bBlockingHit && IsValid(Hit.GetActor()))
 	{
 		LastObjectSeen = Hit.GetActor();
-		if (LastObjectSeen && LastObjectSeen->Implements<UInteractibleActor>())
+		if (LastObjectSeen && LastObjectSeen->Implements<UInteractableActor>())
 		{
 			CurrentInteractible = LastObjectSeen;
 			return;

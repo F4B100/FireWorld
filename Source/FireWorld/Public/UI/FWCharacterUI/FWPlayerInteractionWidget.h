@@ -6,12 +6,12 @@
 #include "FWCharacterHUDWidgetBase.h"
 #include "FWPlayerInteractionWidget.generated.h"
 
-class UInteractionManager;
+class UInteractionManagerComponent;
 class USizeBox;
 class AFWController;
-class UInteractibleActor;
+class UInteractableActor;
 class UTextBlock;
-class IInteractibleActor;
+class IInteractableActor;
 /**
  *
  */
@@ -21,7 +21,7 @@ class FIREWORLD_API UFWPlayerInteractionWidget : public UFWCharacterHUDWidgetBas
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
-	TObjectPtr<UInteractionManager> InteractionManager;
+	TObjectPtr<UInteractionManagerComponent> InteractionManager;
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<AActor> CurrentInteractible = nullptr;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess))

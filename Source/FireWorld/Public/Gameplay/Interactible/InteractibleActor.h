@@ -6,10 +6,11 @@
 #include "UObject/Interface.h"
 #include "InteractibleActor.generated.h"
 
+class ACharacter;
 class AFWCharacter;
 // This class does not need to be modified.
 UINTERFACE(Blueprintable)
-class UInteractibleActor : public UInterface
+class UInteractableActor : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,17 +18,17 @@ class UInteractibleActor : public UInterface
 /**
  * 
  */
-class FIREWORLD_API IInteractibleActor
+class FIREWORLD_API IInteractableActor
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION()
-	virtual void InteractibleInFocus(ACharacter* Interactee);
+	virtual void InteractableInFocus(AFWCharacter* Interactee);
 	UFUNCTION()
-	virtual void InteractibleOutOfFocus(ACharacter* Interactee);
+	virtual void InteractableOutOfFocus(AFWCharacter* Interactee);
 	UFUNCTION()
 	virtual void Interact(AFWCharacter* Interactee);
 	UFUNCTION()
-	virtual FText GetInteractibleActorName();
+	virtual FText GetInteractableActorName();
 };

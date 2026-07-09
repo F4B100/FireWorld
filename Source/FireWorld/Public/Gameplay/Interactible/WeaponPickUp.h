@@ -5,17 +5,22 @@
 #include "CoreMinimal.h"
 #include "InteractibleActor.h"
 #include "GameFramework/Actor.h"
-#include "HealthPack.generated.h"
+#include "WeaponPickUp.generated.h"
+
+class UWeapon;
+class AFWCharacter;
+class ACharacter;
 
 UCLASS()
-class FIREWORLD_API AHealthPack : public AActor, public IInteractableActor
+class FIREWORLD_API AWeaponPickUp : public AActor, public IInteractableActor
 {
 	GENERATED_BODY()
 
 public:
-	AHealthPack();
+	AWeaponPickUp();
 
-	FText Name =  FText::FromString(TEXT("Health Pack"));
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UWeapon> Weapon;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void InteractableInFocus(AFWCharacter* Interactee) override;

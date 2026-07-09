@@ -4,6 +4,7 @@
 
 #include "FWGlobalGI.h"
 #include "Character/FWCharacter.h"
+#include "Engine/Engine.h"
 #include "Engine/World.h"
 #include "Gameplay/Items/FWItem.h"
 #include "Save/FWSaveGame.h"
@@ -38,7 +39,14 @@ void UItemManagerComponent::LoadInventory(FSavedInventory& Inventory)
 
 void UItemManagerComponent::CollectItem(UFWItem *NewItem)
 {
-
+	if (NewItem)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(12576834, 10.0f, FColor::Magenta, NewItem->GetName());
+		}
+		OnItemAdded.Broadcast(NewItem, Items.Add(NewItem));
+	}
 }
 
 void UItemManagerComponent::SaveInventory(FSavedInventory& Inventory)

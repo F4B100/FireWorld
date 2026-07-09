@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Gameplay/Items/FWItem.h"
 #include "WeaponManager.generated.h"
 
 
+class UItemManagerComponent;
 class UFWGlobalGI;
 class UWeapon;
 
@@ -15,6 +17,7 @@ class FIREWORLD_API UWeaponManager : public UActorComponent
 {
 	GENERATED_BODY()
 
+	TObjectPtr<UItemManagerComponent> ItemManager;
 	UWeapon *CurrentWeapon = nullptr;
 	TObjectPtr<UFWGlobalGI> FWGameInstance = nullptr;
 
@@ -26,6 +29,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	void HandleItemRemoved(UFWItem* Item, int32 Index);
+	void HandleItemAdded(UFWItem* Item, int32 Index);
+	void HandleItemChanged(int32 Old, int32 New);
 
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
