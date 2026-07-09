@@ -31,9 +31,6 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<AFWCharacter> OwningCharacter = nullptr;
 
-	UFUNCTION(BlueprintCallable, Server, Reliable)
-	virtual void ServerPerformFire();
-
 	virtual void TickWeapon(float DeltaTime);
 
 	virtual void SwitchedInto(TObjectPtr<AFWCharacter> Character);

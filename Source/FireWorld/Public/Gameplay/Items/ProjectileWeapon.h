@@ -29,5 +29,6 @@ public:
 	virtual void SwitchedInto(TObjectPtr<AFWCharacter> Character) override;
 	virtual void SwitchedOut() override;
 
-	virtual void ServerPerformFire() override;
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	virtual void ServerPerformFire();
 };

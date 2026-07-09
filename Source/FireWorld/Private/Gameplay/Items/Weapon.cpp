@@ -29,8 +29,3 @@ bool UWeapon::GetWantsToFire()
 {
 	return bWantsToFire;
 }
-
-void UWeapon::ServerPerformFire_Implementation()
-{
-}
-

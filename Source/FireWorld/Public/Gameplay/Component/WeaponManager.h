@@ -18,7 +18,7 @@ class FIREWORLD_API UWeaponManager : public UActorComponent
 	GENERATED_BODY()
 
 	TObjectPtr<UItemManagerComponent> ItemManager;
-	UWeapon *CurrentWeapon = nullptr;
+	TObjectPtr<UWeapon> CurrentWeapon = nullptr;
 	TObjectPtr<UFWGlobalGI> FWGameInstance = nullptr;
 
 public:

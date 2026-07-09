@@ -5,6 +5,7 @@
 
 #include "Character/FWCharacter.h"
 #include "Components/SphereComponent.h"
+#include "Engine/Engine.h"
 #include "Gameplay/Actor/FWProjectile.h"
 
 
@@ -16,8 +17,18 @@ void UProjectileWeapon::TickWeapon(float DeltaTime)
 {
 	Super::TickWeapon(DeltaTime);
 	CurrentFiringTime += DeltaTime;
+	if (GEngine)
+	{
+		FStringFormatOrderedArguments Arguments;
+		Arguments.Add(GetWantsToFire());
+		GEngine->AddOnScreenDebugMessage(3454879, 10.0f, FColor::Magenta, FString::Format(TEXT("{0}\n"), Arguments));
+	}
 	if (CurrentFiringTime > FiringCooldown && GetWantsToFire())
 	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(354879, 10.0f, FColor::Magenta, TEXT("Firing\n"));
+		}
 		ServerPerformFire();
 		CurrentFiringTime = 0.0f;
 	}
@@ -33,9 +44,8 @@ void UProjectileWeapon::SwitchedOut()
 	Super::SwitchedOut();
 }
 
-void UProjectileWeapon::ServerPerformFire()
+void UProjectileWeapon::ServerPerformFire_Implementation()
 {
-	Super::ServerPerformFire();
 	if (ProjectileClass && OwningCharacter)
 	{
 		FVector CameraLocation;
