@@ -14,7 +14,7 @@ class UItemManagerComponent;
 class UStablePositionUpdater;
 class UPlayerStatsComponent;
 class UWeapon;
-class UFWGlobalGI;
+class UFWGameInstance;
 class UFWCharacterMovementComponent;
 class UInputAction;
 
@@ -29,7 +29,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Bool)
 	bool bShouldReadSaveData = false;
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UFWGlobalGI> FWGameInstance = nullptr;
+	TObjectPtr<UFWGameInstance> FWGameInstance = nullptr;
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<AFWController> FWController = nullptr;
 

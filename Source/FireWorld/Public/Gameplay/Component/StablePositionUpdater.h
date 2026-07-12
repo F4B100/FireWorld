@@ -7,7 +7,7 @@
 #include "StablePositionUpdater.generated.h"
 
 
-class UFWGlobalGI;
+class UFWGameInstance;
 class UFWSaveGame;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -16,7 +16,7 @@ class FIREWORLD_API UStablePositionUpdater : public UActorComponent
 	GENERATED_BODY()
 
 	UPROPERTY(Blueprintable, VisibleAnywhere, Category = "References", meta = (AllowPrivate))
-	TObjectPtr<UFWGlobalGI> GameInstance = nullptr;
+	TObjectPtr<UFWGameInstance> GameInstance = nullptr;
 
 	UPROPERTY(Blueprintable, VisibleAnywhere, Category = "References", meta = (AllowPrivate))
 	TObjectPtr<ACharacter> Owner = nullptr;

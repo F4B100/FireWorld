@@ -3,6 +3,7 @@
 
 #include "Gameplay/Items/FWItem.h"
 
+#include "Serialization/MemoryWriter.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 
 void UFWItem::CreateSavedItem(FSavedItem& SavedItem)
@@ -20,5 +21,6 @@ void UFWItem::CreateSavedItem(FSavedItem& SavedItem)
 
 void UFWItem::Serialize(FArchive& Ar)
 {
+	UObject::Serialize(Ar);
 	Ar << ItemName;
 }

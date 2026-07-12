@@ -9,7 +9,7 @@
 
 class AFWProjectile;
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Custom), Blueprintable)
 class FIREWORLD_API UProjectileWeapon : public UWeapon
 {
 	GENERATED_BODY()
@@ -20,9 +20,9 @@ public:
 	UProjectileWeapon();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	FVector MuzzleOffset;
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<AFWProjectile> ProjectileClass;
+	FVector MuzzleOffset = FVector::ZeroVector;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<AFWProjectile> ProjectileClass = nullptr;
 
 	virtual void TickWeapon(float DeltaTime) override;
 

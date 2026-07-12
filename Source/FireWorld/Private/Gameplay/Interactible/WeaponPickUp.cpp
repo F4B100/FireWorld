@@ -33,7 +33,7 @@ void AWeaponPickUp::Interact(AFWCharacter* Interactee)
 
 		if (ItemManager)
 		{
-			UProjectileWeapon *NewWeapon = NewObject<UProjectileWeapon>();
+			UProjectileWeapon *NewWeapon = NewObject<UProjectileWeapon>(this, Weapon);
 			ItemManager.Get()->CollectItem(NewWeapon);
 		}
 	}

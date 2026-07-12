@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "FWGlobalGI.generated.h"
+#include "FWGameInstance.generated.h"
 
 class UFWSaveNames;
 class UFWSaveGame;
@@ -13,20 +13,32 @@ class UFWUserSettings;
  * 
  */
 UCLASS(Blueprintable)
-class FIREWORLD_API UFWGlobalGI : public UGameInstance
+class FIREWORLD_API UFWGameInstance : public UGameInstance
 {
 	FString SaveNamesName = FString("SaveNames");
 public:
+	// Variables
 	UPROPERTY(BlueprintReadOnly, Category=Save)
 	TObjectPtr<UFWSaveNames> SaveNames = nullptr;
+
 	UPROPERTY(BlueprintReadWrite, Category=Save)
 	TObjectPtr<UFWSaveGame> CurrentLoadedSave = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category=Save)
+	bool bShouldSaveGame = false;
+	UFUNCTION(BlueprintCallable)
+	bool GetShouldSaveGame(){return bShouldSaveGame;}
+	UFUNCTION(BlueprintCallable)
+	void SetShouldSaveGame(const bool New){bShouldSaveGame = New;}
+
 	UPROPERTY(BlueprintReadOnly, Category=Save)
 	FString LoadedSaveName = FString("");
+
 	UPROPERTY(BlueprintReadOnly, Category=Save)
 	TObjectPtr<UFWUserSettings> UserSettings = nullptr;
-	
-	UFWGlobalGI();
+
+	// Functions
+	UFWGameInstance();
 
 	UFUNCTION(BlueprintCallable)
 	void SaveGame();

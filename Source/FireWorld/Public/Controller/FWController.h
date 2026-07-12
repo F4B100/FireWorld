@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "FWController.generated.h"
 
+class UFWGameInstance;
 class UEnhancedInputComponent;
 class AFWCharacterHUD;
 struct FInputActionValue;
@@ -52,6 +53,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category ="HUD")
 	TObjectPtr<AFWCharacterHUD> FWHUD = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category ="GameInstance")
+	TObjectPtr<UFWGameInstance> FWGameInstance = nullptr;
 	
 	AFWController();
 

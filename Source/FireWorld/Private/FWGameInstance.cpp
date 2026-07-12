@@ -1,13 +1,15 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "FWGlobalGI.h"
+#include "FWGameInstance.h"
 
+#include "Engine/Engine.h"
+#include "Kismet/GameplayStatics.h"
 #include "Save/FWSaveGame.h"
 #include "Save/FWSaveNames.h"
 #include "Save/FWUserSettings.h"
 
-UFWGlobalGI::UFWGlobalGI()
+UFWGameInstance::UFWGameInstance()
 {
 	if (UGameplayStatics::DoesSaveGameExist(SaveNamesName, 0))
 	{
@@ -28,7 +30,7 @@ UFWGlobalGI::UFWGlobalGI()
 	}
 }
 
-void UFWGlobalGI::SaveGame()
+void UFWGameInstance::SaveGame()
 {
 	if (!CurrentLoadedSave)
 	{
@@ -41,9 +43,10 @@ void UFWGlobalGI::SaveGame()
 		}
 	}
 	UGameplayStatics::SaveGameToSlot(CurrentLoadedSave, LoadedSaveName, 0);
+	bShouldSaveGame = false;
 }
 
-bool UFWGlobalGI::CreateSaveGame(const FString SaveName)
+bool UFWGameInstance::CreateSaveGame(const FString SaveName)
 {
 	if (SaveNames.Get()->SaveNames.Contains(SaveName))
 		return false;
@@ -59,7 +62,7 @@ bool UFWGlobalGI::CreateSaveGame(const FString SaveName)
 	return true;
 }
 
-bool UFWGlobalGI::ChangeLoadedSaveGame(const FString SaveName)
+bool UFWGameInstance::ChangeLoadedSaveGame(const FString SaveName)
 {
 	if (!SaveNames.Get()->SaveNames.Contains(SaveName))
 		return false;
@@ -76,17 +79,17 @@ bool UFWGlobalGI::ChangeLoadedSaveGame(const FString SaveName)
 	return CurrentLoadedSave == nullptr;
 }
 
-bool UFWGlobalGI::HasLoadedSaveGame() const
+bool UFWGameInstance::HasLoadedSaveGame() const
 {
 	return CurrentLoadedSave != nullptr;
 }
 
-bool UFWGlobalGI::DoesSaveExist(const FString SaveName)
+bool UFWGameInstance::DoesSaveExist(const FString SaveName)
 {
 	return SaveNames.Get()->SaveNames.Contains(SaveName) && UGameplayStatics::DoesSaveGameExist(SaveName, 0);
 }
 
-TArray<FString> UFWGlobalGI::SaveNamesArray()
+TArray<FString> UFWGameInstance::SaveNamesArray()
 {
 	return SaveNames.Get()->SaveNames.Array();
 }

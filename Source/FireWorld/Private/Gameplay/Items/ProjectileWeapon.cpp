@@ -37,6 +37,7 @@ void UProjectileWeapon::TickWeapon(float DeltaTime)
 void UProjectileWeapon::SwitchedInto(TObjectPtr<AFWCharacter> Character)
 {
 	Super::SwitchedInto(Character);
+	OwningCharacter = Character;
 }
 
 void UProjectileWeapon::SwitchedOut()

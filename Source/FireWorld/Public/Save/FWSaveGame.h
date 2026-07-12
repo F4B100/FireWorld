@@ -28,4 +28,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
 	FSavedInventory SavedInventory = FSavedInventory();
+
+	// Weapon
+	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
+	int32 CurrentWeaponIndex = -1;
 };

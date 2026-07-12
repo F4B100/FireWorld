@@ -10,7 +10,7 @@
 /**
  *
  */
-UCLASS()
+UCLASS(ClassGroup=(Custom), Blueprintable)
 class FIREWORLD_API UFWItem : public UObject
 {
 	GENERATED_BODY()

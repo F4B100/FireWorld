@@ -5,6 +5,7 @@
 
 #include "Character/FWCharacter.h"
 #include "Engine/Engine.h"
+#include "Gameplay/Component/PlayerStatsComponent.h"
 
 
 AHealthPack::AHealthPack()
@@ -25,6 +26,7 @@ void AHealthPack::Interact(AFWCharacter* Interactee)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Emerald, Interactee->GetName());
 	}
+	Interactee->GetPlayerStats()->RestoreHealth(10.0f);
 }
 
 FText AHealthPack::GetInteractableActorName()

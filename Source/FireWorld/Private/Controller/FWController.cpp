@@ -4,8 +4,11 @@
 #include "Controller/FWController.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "FWGameInstance.h"
 #include "Character/FWCharacter.h"
+#include "Engine/Engine.h"
 #include "HUD/FWCharacterHUD.h"
+#include "Save/FWSaveGame.h"
 #include "UserSettings/EnhancedInputUserSettings.h"
 
 
@@ -14,6 +17,8 @@ AFWController::AFWController()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	FWGameInstance = Cast<UFWGameInstance>(GetGameInstance());
 }
 
 // Called when the game starts or when spawned
@@ -113,6 +118,25 @@ void AFWController::HandleLook(const FInputActionValue& InputActionValue)
 void AFWController::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (FWGameInstance && FWGameInstance.Get()->GetShouldSaveGame())
+	{
+		FWGameInstance->SaveGame();
+
+		UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave;
+	}
+	if (FWGameInstance.Get()->CurrentLoadedSave)
+	{
+		UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave;
+
+		if (GEngine)
+		{
+			const FString Message = FString::Printf(TEXT("Player Level:%s\n"),
+				*SaveGame->PlayerLevel
+				);
+			GEngine->AddOnScreenDebugMessage(775218, 10.0f, FColor::Red, Message);
+		}
+	}
 }
 
 void AFWController::AcknowledgePossession(APawn* P)

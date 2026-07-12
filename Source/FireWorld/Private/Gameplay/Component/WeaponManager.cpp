@@ -3,7 +3,7 @@
 
 #include "Gameplay/Component/WeaponManager.h"
 
-#include "FWGlobalGI.h"
+#include "FWGameInstance.h"
 #include "Character/FWCharacter.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
@@ -14,6 +14,8 @@
 UWeaponManager::UWeaponManager()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+
+	Owner = Cast<AFWCharacter>(GetOwner());
 }
 
 void UWeaponManager::StartFire()
@@ -55,35 +57,111 @@ void UWeaponManager::BeginPlay()
 		);
 	}
 
-	FWGameInstance = Cast<UFWGlobalGI>(GetWorld()->GetGameInstance());
+	FWGameInstance = Cast<UFWGameInstance>(GetWorld()->GetGameInstance());
 	if (FWGameInstance)
 	{
 		if (FWGameInstance.Get()->CurrentLoadedSave)
 		{
 			UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave.Get();
+			if (SaveGame)
+			{
+				ChangeEquippedWeapon(SaveGame->CurrentWeaponIndex);
+			}
 		}
 	}
 }
 
 void UWeaponManager::HandleItemRemoved(UFWItem* Item, int32 Index)
 {
-	if (CurrentWeapon == Item)
+	if (CurrentWeapon == Item || CurrentWeaponIndex == Index)
 	{
-		CurrentWeapon = nullptr;
+		ChangeEquippedWeapon(-1);
 	}
 }
 
 void UWeaponManager::HandleItemAdded(UFWItem* Item, int32 Index)
 {
-	if (!CurrentWeapon && Item->GetClass()->IsChildOf(UWeapon::StaticClass()))
+	if (!CurrentWeapon && CurrentWeaponIndex < 0)
 	{
-		CurrentWeapon = Cast<UWeapon>(Item);
+		ChangeEquippedWeapon(Index);
 	}
 }
 
 void UWeaponManager::HandleItemChanged(int32 Old, int32 New)
 {
+	if (CurrentWeaponIndex == Old)
+	{
+		ChangeEquippedWeapon(New);
+	}
+	if (CurrentWeaponIndex == New)
+	{
+		ChangeEquippedWeapon(Old);
+	}
+}
 
+void UWeaponManager::ChangeEquippedWeapon(int32 Index, UWeapon *Weapon)
+{
+	if (Index < 0)
+	{
+		CurrentWeaponIndex = -1;
+		CurrentWeapon = nullptr;
+		if (FWGameInstance)
+		{
+			if (FWGameInstance.Get()->CurrentLoadedSave)
+			{
+				UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave.Get();
+				if (SaveGame)
+				{
+					SaveGame->CurrentWeaponIndex = CurrentWeaponIndex;
+				}
+			}
+		}
+		return;
+	}
+	if (Weapon)
+	{
+		CurrentWeapon = Weapon;
+		CurrentWeaponIndex = Index;
+			CurrentWeapon.Get()->SwitchedInto(Owner);
+		if (FWGameInstance)
+		{
+			if (FWGameInstance.Get()->CurrentLoadedSave)
+			{
+				UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave.Get();
+				if (SaveGame)
+				{
+					SaveGame->CurrentWeaponIndex = CurrentWeaponIndex;
+				}
+			}
+		}
+		return;
+	}
+	TArray<UFWItem*> Items = ItemManager->GetAllItems();
+	if (Items.IsEmpty())
+	{
+		return;
+	}
+	if (Items.IsValidIndex(Index))
+	{
+		UFWItem *Item = Items[Index];
+		if (UWeapon *WeaponCast = Cast<UWeapon>(Item))
+		{
+			CurrentWeaponIndex = Index;
+			CurrentWeapon = WeaponCast;
+			CurrentWeapon.Get()->SwitchedInto(Owner);
+			if (FWGameInstance)
+			{
+				if (FWGameInstance.Get()->CurrentLoadedSave)
+				{
+					if (UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave.Get())
+					{
+						SaveGame->CurrentWeaponIndex = CurrentWeaponIndex;
+					}
+				}
+			}
+			return;
+		}
+	}
 }
 
 void UWeaponManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

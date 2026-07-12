@@ -8,5 +8,6 @@ USTRUCT(Blueprintable)
 struct FSavedInventory
 {
 	GENERATED_BODY()
+	UPROPERTY()
 	TArray<FSavedItem> Items;
 };

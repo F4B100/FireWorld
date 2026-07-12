@@ -8,7 +8,7 @@
 #include "ItemManagerComponent.generated.h"
 
 struct FSavedInventory;
-class UFWGlobalGI;
+class UFWGameInstance;
 class AFWCharacter;
 class UFWItem;
 
@@ -20,7 +20,7 @@ class FIREWORLD_API UItemManagerComponent : public UActorComponent
 public:
 	UItemManagerComponent();
 
-	TObjectPtr<UFWGlobalGI> GameInstance = nullptr;
+	TObjectPtr<UFWGameInstance> GameInstance = nullptr;
 
 	virtual void BeginPlay() override;
 	void LoadInventory(FSavedInventory& Inventory);
@@ -29,6 +29,11 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<TObjectPtr<UFWItem>> Items;
+
+	UFUNCTION(BlueprintCallable)
+	UFWItem *GetItem(int32 Index);
+	UFUNCTION(BlueprintCallable)
+	TArray<UFWItem *> GetAllItems();
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAdded, UFWItem*, int32);
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemRemoved, UFWItem*, int32);

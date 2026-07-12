@@ -19,7 +19,7 @@ struct FWeaponSaveInfo
 	int64 ClipAmmo;
 };
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Custom), Blueprintable)
 class FIREWORLD_API UWeapon : public UFWItem
 {
 	GENERATED_BODY()

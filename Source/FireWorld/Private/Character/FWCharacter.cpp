@@ -3,7 +3,7 @@
 
 #include "Character/FWCharacter.h"
 
-#include "FWGlobalGI.h"
+#include "FWGameInstance.h"
 #include "Character/FWCharacterMovementComponent.h"
 #include "Controller/FWController.h"
 #include "Engine/Engine.h"
@@ -48,7 +48,7 @@ void AFWCharacter::BeginPlay()
 	}
 
 	if (!FWGameInstance)
-		FWGameInstance = Cast<UFWGlobalGI>(GetGameInstance());
+		FWGameInstance = Cast<UFWGameInstance>(GetGameInstance());
 
 	if (!FWController)
 	{
@@ -74,7 +74,7 @@ void AFWCharacter::BeginDestroy()
 		FWGameInstance->CurrentLoadedSave->PlayerLevel = Level;
 		FWGameInstance->CurrentLoadedSave->bHasSavedLevel = true;
 		
-		FWGameInstance->SaveGame();
+		FWGameInstance->SetShouldSaveGame(true);
 	}
 }
 

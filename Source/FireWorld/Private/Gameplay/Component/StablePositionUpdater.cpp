@@ -3,7 +3,8 @@
 
 #include "Gameplay/Component/StablePositionUpdater.h"
 
-#include "FWGlobalGI.h"
+#include "FWGameInstance.h"
+#include "Engine/World.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Save/FWSaveGame.h"
@@ -30,7 +31,7 @@ void UStablePositionUpdater::BeginPlay()
 		return;
 	}
 
-	GameInstance = Cast<UFWGlobalGI>(GetWorld()->GetGameInstance());
+	GameInstance = Cast<UFWGameInstance>(GetWorld()->GetGameInstance());
 	if (!GameInstance)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("StablePositionUpdater::BeginPlay: GameInstance could not be set."));
@@ -57,15 +58,14 @@ void UStablePositionUpdater::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	if (Owner)
 	{
-		AActor* StandingOnActor = Owner.Get()->GetCharacterMovement()->CurrentFloor.HitResult.GetActor();
-		if (StandingOnActor)
+		if (const AActor* StandingOnActor = Owner.Get()->GetCharacterMovement()->CurrentFloor.HitResult.GetActor())
 		{
 			if (StandingOnActor->Tags.Contains(StableFloorTagName))
 			{
 				StablePosition = Owner.Get()->GetActorTransform();
 
 				GameInstance.Get()->CurrentLoadedSave->SavedActorTransforms.Add(SavePositionName, StablePosition);
-				GameInstance.Get()->SaveGame();
+				GameInstance.Get()->SetShouldSaveGame(true);
 			}
 		}
 	}
