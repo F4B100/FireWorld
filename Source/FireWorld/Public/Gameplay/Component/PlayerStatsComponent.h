@@ -43,5 +43,4 @@ public:
 	void DoDamage(float Damage);
 	UFUNCTION(BlueprintCallable, Category = Health)
 	void RestoreHealth(float HealthToRestore);
-
 };

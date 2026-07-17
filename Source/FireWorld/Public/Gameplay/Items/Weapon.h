@@ -9,16 +9,6 @@
 
 class AFWCharacter;
 
-USTRUCT(Blueprintable)
-struct FWeaponSaveInfo
-{
-	GENERATED_BODY()
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int64 ReserveAmmo;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int64 ClipAmmo;
-};
-
 UCLASS(ClassGroup=(Custom), Blueprintable)
 class FIREWORLD_API UWeapon : public UFWItem
 {

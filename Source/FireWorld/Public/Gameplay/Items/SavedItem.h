@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/SoftObjectPtr.h"
 #include "SavedItem.generated.h"
 
 class UFWItem;
@@ -12,8 +11,8 @@ struct FSavedItem
 	GENERATED_BODY()
 
 	UPROPERTY()
-	TSoftClassPtr<UFWItem> ItemClass;
+	TSoftClassPtr<UFWItem> ItemClass = nullptr;
 
 	UPROPERTY()
-	TArray<uint8> SerializedData;
+	TArray<uint8> SerializedData = TArray<uint8>();
 };

@@ -56,9 +56,9 @@ public:
 	UItemManagerComponent *GetItemManager() {return ItemManager;}
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UKeyInventoryComponent> KeyInventory = nullptr;
+	TObjectPtr<UKeyInventoryComponent> KeyManager = nullptr;
 	UFUNCTION(BlueprintCallable)
-	UKeyInventoryComponent *GetKeyInventory() {return KeyInventory;}
+	UKeyInventoryComponent *GetKeyInventory() {return KeyManager;}
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UWeaponManager> WeaponManager = nullptr;

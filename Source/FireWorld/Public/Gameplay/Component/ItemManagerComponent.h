@@ -20,11 +20,13 @@ class FIREWORLD_API UItemManagerComponent : public UActorComponent
 public:
 	UItemManagerComponent();
 
+	UPROPERTY()
 	TObjectPtr<UFWGameInstance> GameInstance = nullptr;
 
 	virtual void BeginPlay() override;
 	void LoadInventory(FSavedInventory& Inventory);
 
+	UPROPERTY()
 	TObjectPtr<AFWCharacter> Owner;
 
 	UPROPERTY(BlueprintReadOnly)

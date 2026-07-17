@@ -30,17 +30,6 @@ void UItemManagerComponent::BeginPlay()
 	}
 }
 
-void UItemManagerComponent::LoadInventory(FSavedInventory& Inventory)
-{
-	for (auto Item : Inventory.Items)
-	{
-		UClass *ItemClass = Item.ItemClass.LoadSynchronous();
-		UFWItem *NewItem = NewObject<UFWItem>(this, ItemClass);
-		FMemoryReader Reader(Item.SerializedData);
-		NewItem->Serialize(Reader);
-	}
-}
-
 UFWItem *UItemManagerComponent::GetItem(int32 Index)
 {
 	if (Items.IsValidIndex(Index))
@@ -64,13 +53,9 @@ void UItemManagerComponent::CollectItem(UFWItem *NewItem)
 			GEngine->AddOnScreenDebugMessage(12576834, 10.0f, FColor::Magenta, NewItem->GetClass()->GetClassPathName().ToString());
 		}
 		OnItemAdded.Broadcast(NewItem, Items.Add(NewItem));
-		SaveInventory(GameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory);
-		if (GEngine)
+		if (GameInstance.Get()->CurrentLoadedSave)
 		{
-			for (const FSavedItem& I : GameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory.Items)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Cyan, I.ItemClass.GetAssetName());
-			}
+			SaveInventory(GameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory);
 		}
 		GameInstance.Get()->SetShouldSaveGame(true);
 	}
@@ -83,5 +68,16 @@ void UItemManagerComponent::SaveInventory(FSavedInventory& Inventory)
 	{
 		FSavedItem& Item = Inventory.Items.Emplace_GetRef();
 		I->CreateSavedItem(Item);
+	}
+}
+
+void UItemManagerComponent::LoadInventory(FSavedInventory& Inventory)
+{
+	for (auto Item : Inventory.Items)
+	{
+		UClass *ItemClass = Item.ItemClass.LoadSynchronous();
+		UFWItem *NewItem = NewObject<UFWItem>(this, ItemClass);
+		FMemoryReader Reader(Item.SerializedData);
+		NewItem->Serialize(Reader);
 	}
 }

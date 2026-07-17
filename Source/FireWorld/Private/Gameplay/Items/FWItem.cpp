@@ -3,6 +3,7 @@
 
 #include "Gameplay/Items/FWItem.h"
 
+#include "Gameplay/Items/SavedItem.h"
 #include "Serialization/MemoryWriter.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 

@@ -18,6 +18,6 @@ class FIREWORLD_API UFWItem : public UObject
 	FName ItemName = FName("No Name");
 
 	virtual void CreateSavedItem(FSavedItem& SavedItem);
-	void Deserialize(TArray<uint8> Data);
+
 	virtual void Serialize(FArchive& Ar) override;
 };

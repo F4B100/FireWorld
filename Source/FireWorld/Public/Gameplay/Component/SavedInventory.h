@@ -1,13 +1,14 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Gameplay/Items/SavedItem.h"
 #include "SavedInventory.generated.h"
+
+struct FSavedItem;
 
 USTRUCT(Blueprintable)
 struct FSavedInventory
 {
 	GENERATED_BODY()
 	UPROPERTY()
-	TArray<FSavedItem> Items;
+	TArray<FSavedItem> Items = TArray<FSavedItem>();
 };

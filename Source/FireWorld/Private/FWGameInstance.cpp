@@ -28,6 +28,14 @@ UFWGameInstance::UFWGameInstance()
 		}
 		UGameplayStatics::SaveGameToSlot(SaveNames, SaveNamesName, 0);
 	}
+	for (auto Name: SaveNames.Get()->SaveNames)
+	{
+		if (!DoesSaveExist(Name))
+		{
+			SaveNames.Get()->SaveNames.Remove(Name);
+		}
+	}
+
 }
 
 void UFWGameInstance::SaveGame()
@@ -46,19 +54,35 @@ void UFWGameInstance::SaveGame()
 	bShouldSaveGame = false;
 }
 
+void UFWGameInstance::SaveSaveNames()
+{
+	UGameplayStatics::SaveGameToSlot(SaveNames, LoadedSaveName, 0);
+}
+
 bool UFWGameInstance::CreateSaveGame(const FString SaveName)
 {
 	if (SaveNames.Get()->SaveNames.Contains(SaveName))
 		return false;
 	SaveNames.Get()->SaveNames.Emplace(SaveName);
-	UGameplayStatics::SaveGameToSlot(SaveNames, SaveNamesName, 0);
-	CurrentLoadedSave = Cast<UFWSaveGame>(UGameplayStatics::CreateSaveGameObject(UFWSaveGame::StaticClass()));
-
+	ChangeLoadedSaveGame(SaveName);
+	SaveGame();
+	SaveSaveNames();
 	if (CurrentLoadedSave == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to create save object in FW Game Instance."));
 		return false;
 	}
+	return true;
+}
+
+bool UFWGameInstance::DeleteSaveGame(const FString SaveName)
+{
+	if (!DoesSaveExist(SaveName))
+	{
+		return false;
+	}
+	UGameplayStatics::DeleteGameInSlot(LoadedSaveName, 0);
+	SaveNames.Get()->SaveNames.Remove(SaveName);
 	return true;
 }
 
@@ -92,4 +116,13 @@ bool UFWGameInstance::DoesSaveExist(const FString SaveName)
 TArray<FString> UFWGameInstance::SaveNamesArray()
 {
 	return SaveNames.Get()->SaveNames.Array();
+}
+
+UFWSaveGame* UFWGameInstance::GetSaveGame(const FString SaveName)
+{
+	if (DoesSaveExist(SaveName))
+	{
+		return Cast<UFWSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveName, 0));
+	}
+	return nullptr;
 }

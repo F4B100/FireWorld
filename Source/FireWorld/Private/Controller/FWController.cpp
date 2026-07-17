@@ -129,6 +129,11 @@ void AFWController::Tick(const float DeltaTime)
 	{
 		UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave;
 
+		SaveGame->PlayerData.Empty();
+		FMemoryWriter PlayerWriter = FMemoryWriter(SaveGame->PlayerData);
+		FArchive Ar = FArchive(PlayerWriter);
+		FWCharacter->Serialize(Ar);
+
 		if (GEngine)
 		{
 			const FString Message = FString::Printf(TEXT("Player Level:%s\n"),

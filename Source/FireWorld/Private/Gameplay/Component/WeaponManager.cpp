@@ -58,17 +58,6 @@ void UWeaponManager::BeginPlay()
 	}
 
 	FWGameInstance = Cast<UFWGameInstance>(GetWorld()->GetGameInstance());
-	if (FWGameInstance)
-	{
-		if (FWGameInstance.Get()->CurrentLoadedSave)
-		{
-			UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave.Get();
-			if (SaveGame)
-			{
-				ChangeEquippedWeapon(SaveGame->CurrentWeaponIndex);
-			}
-		}
-	}
 }
 
 void UWeaponManager::HandleItemRemoved(UFWItem* Item, int32 Index)
@@ -105,17 +94,6 @@ void UWeaponManager::ChangeEquippedWeapon(int32 Index, UWeapon *Weapon)
 	{
 		CurrentWeaponIndex = -1;
 		CurrentWeapon = nullptr;
-		if (FWGameInstance)
-		{
-			if (FWGameInstance.Get()->CurrentLoadedSave)
-			{
-				UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave.Get();
-				if (SaveGame)
-				{
-					SaveGame->CurrentWeaponIndex = CurrentWeaponIndex;
-				}
-			}
-		}
 		return;
 	}
 	if (Weapon)
@@ -123,17 +101,6 @@ void UWeaponManager::ChangeEquippedWeapon(int32 Index, UWeapon *Weapon)
 		CurrentWeapon = Weapon;
 		CurrentWeaponIndex = Index;
 			CurrentWeapon.Get()->SwitchedInto(Owner);
-		if (FWGameInstance)
-		{
-			if (FWGameInstance.Get()->CurrentLoadedSave)
-			{
-				UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave.Get();
-				if (SaveGame)
-				{
-					SaveGame->CurrentWeaponIndex = CurrentWeaponIndex;
-				}
-			}
-		}
 		return;
 	}
 	TArray<UFWItem*> Items = ItemManager->GetAllItems();
@@ -149,17 +116,6 @@ void UWeaponManager::ChangeEquippedWeapon(int32 Index, UWeapon *Weapon)
 			CurrentWeaponIndex = Index;
 			CurrentWeapon = WeaponCast;
 			CurrentWeapon.Get()->SwitchedInto(Owner);
-			if (FWGameInstance)
-			{
-				if (FWGameInstance.Get()->CurrentLoadedSave)
-				{
-					if (UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave.Get())
-					{
-						SaveGame->CurrentWeaponIndex = CurrentWeaponIndex;
-					}
-				}
-			}
-			return;
 		}
 	}
 }
@@ -183,4 +139,3 @@ void UWeaponManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		CurrentWeapon->TickWeapon(DeltaTime);
 	}
 }
-

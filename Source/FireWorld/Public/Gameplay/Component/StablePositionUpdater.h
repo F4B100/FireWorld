@@ -7,6 +7,7 @@
 #include "StablePositionUpdater.generated.h"
 
 
+class ACharacter;
 class UFWGameInstance;
 class UFWSaveGame;
 

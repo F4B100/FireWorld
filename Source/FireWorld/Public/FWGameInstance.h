@@ -15,6 +15,8 @@ class UFWUserSettings;
 UCLASS(Blueprintable)
 class FIREWORLD_API UFWGameInstance : public UGameInstance
 {
+	GENERATED_BODY()
+
 	FString SaveNamesName = FString("SaveNames");
 public:
 	// Variables
@@ -23,6 +25,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category=Save)
 	TObjectPtr<UFWSaveGame> CurrentLoadedSave = nullptr;
+	UPROPERTY(BlueprintReadOnly, Category=Save)
+	FString LoadedSaveName = FString();
 
 	UPROPERTY(BlueprintReadOnly, Category=Save)
 	bool bShouldSaveGame = false;
@@ -30,9 +34,6 @@ public:
 	bool GetShouldSaveGame(){return bShouldSaveGame;}
 	UFUNCTION(BlueprintCallable)
 	void SetShouldSaveGame(const bool New){bShouldSaveGame = New;}
-
-	UPROPERTY(BlueprintReadOnly, Category=Save)
-	FString LoadedSaveName = FString("");
 
 	UPROPERTY(BlueprintReadOnly, Category=Save)
 	TObjectPtr<UFWUserSettings> UserSettings = nullptr;
@@ -43,7 +44,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SaveGame();
 	UFUNCTION(BlueprintCallable)
+	void SaveSaveNames();
+	UFUNCTION(BlueprintCallable)
 	bool CreateSaveGame(const FString SaveName);
+	UFUNCTION(BlueprintCallable)
+	bool DeleteSaveGame(const FString SaveName);
 	UFUNCTION(BlueprintCallable)
 	bool ChangeLoadedSaveGame(const FString SaveName);
 	UFUNCTION(BlueprintCallable)
@@ -52,6 +57,7 @@ public:
 	bool DoesSaveExist(const FString SaveName);
 	UFUNCTION(BlueprintCallable)
 	TArray<FString> SaveNamesArray();
-private:
-	GENERATED_BODY()
+
+	UFUNCTION(BlueprintCallable)
+	UFWSaveGame *GetSaveGame(const FString SaveName);
 };

@@ -16,6 +16,7 @@
 #include "Gameplay/Component/PlayerStatsComponent.h"
 #include "Gameplay/Component/WeaponManager.h"
 #include "Save/FWSaveGame.h"
+#include "Serialization/MemoryReader.h"
 
 AFWCharacter::AFWCharacter(FObjectInitializer const &ObjectInitializer)
 : Super(ObjectInitializer.SetDefaultSubobjectClass<UFWCharacterMovementComponent>(CharacterMovementComponentName))
@@ -24,7 +25,7 @@ AFWCharacter::AFWCharacter(FObjectInitializer const &ObjectInitializer)
 	PlayerStats = CreateDefaultSubobject<UPlayerStatsComponent>(TEXT("PlayerStatsManager"));
 	StablePositionUpdater = CreateDefaultSubobject<UStablePositionUpdater>(TEXT("StablePosition"));
 	ItemManager = CreateDefaultSubobject<UItemManagerComponent>(TEXT("ItemManager"));
-	KeyInventory = CreateDefaultSubobject<UKeyInventoryComponent>(TEXT("KeyManager"));
+	KeyManager = CreateDefaultSubobject<UKeyInventoryComponent>(TEXT("KeyManager"));
 	WeaponManager = CreateDefaultSubobject<UWeaponManager>(TEXT("WeaponManager"));
 	InteractionManager = CreateDefaultSubobject<UInteractionManagerComponent>(TEXT("InteractionManager"));
 
@@ -56,6 +57,13 @@ void AFWCharacter::BeginPlay()
 	}
 
 	Level = GetWorld()->GetName();
+
+	if (FWGameInstance && FWGameInstance.Get()->CurrentLoadedSave)
+	{
+		FMemoryReader PlayerReader = FMemoryReader(FWGameInstance->CurrentLoadedSave->PlayerData);
+		FArchive Ar = FArchive(PlayerReader);
+		Serialize(Ar);
+	}
 
 	SetActorTransform(StablePositionUpdater->StablePosition, false, nullptr, ETeleportType::TeleportPhysics);
 }
