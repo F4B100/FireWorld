@@ -5,6 +5,7 @@
 
 #include "FWGameInstance.h"
 #include "Character/FWCharacterMovementComponent.h"
+#include "Character/FWPlayerState.h"
 #include "Controller/FWController.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
@@ -17,17 +18,18 @@
 #include "Gameplay/Component/WeaponManager.h"
 #include "Save/FWSaveGame.h"
 #include "Serialization/MemoryReader.h"
+#include "Serialization/MemoryWriter.h"
+#include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 
 AFWCharacter::AFWCharacter(FObjectInitializer const &ObjectInitializer)
 : Super(ObjectInitializer.SetDefaultSubobjectClass<UFWCharacterMovementComponent>(CharacterMovementComponentName))
 {
 	FWMovementComponent = Cast<UFWCharacterMovementComponent>(Super::GetMovementComponent());
-	PlayerStats = CreateDefaultSubobject<UPlayerStatsComponent>(TEXT("PlayerStatsManager"));
-	StablePositionUpdater = CreateDefaultSubobject<UStablePositionUpdater>(TEXT("StablePosition"));
-	ItemManager = CreateDefaultSubobject<UItemManagerComponent>(TEXT("ItemManager"));
-	KeyManager = CreateDefaultSubobject<UKeyInventoryComponent>(TEXT("KeyManager"));
-	WeaponManager = CreateDefaultSubobject<UWeaponManager>(TEXT("WeaponManager"));
-	InteractionManager = CreateDefaultSubobject<UInteractionManagerComponent>(TEXT("InteractionManager"));
+	PlayerStats = ObjectInitializer.CreateDefaultSubobject<UPlayerStatsComponent>(this, TEXT("PlayerStatsManager"));
+	StablePositionUpdater = ObjectInitializer.CreateDefaultSubobject<UStablePositionUpdater>(this, TEXT("StablePosition"));
+	KeyManager = ObjectInitializer.CreateDefaultSubobject<UKeyInventoryComponent>(this, TEXT("KeyManager"));
+	WeaponManager = ObjectInitializer.CreateDefaultSubobject<UWeaponManager>(this, TEXT("WeaponManager"));
+	InteractionManager = ObjectInitializer.CreateDefaultSubobject<UInteractionManagerComponent>(this, TEXT("InteractionManager"));
 
 	GetCharacterMovement()->SetIsReplicated(true);
 	bReplicates = true;
@@ -48,21 +50,27 @@ void AFWCharacter::BeginPlay()
 		FWMovementComponent->GetNavAgentPropertiesRef().bCanJump = true;
 	}
 
-	if (!FWGameInstance)
-		FWGameInstance = Cast<UFWGameInstance>(GetGameInstance());
+	FWGameInstance = Cast<UFWGameInstance>(GetGameInstance());
+	FWController = Cast<AFWController>(GetController());
+	FWPlayerState = Cast<AFWPlayerState>(GetPlayerState());
 
-	if (!FWController)
+	if (FWPlayerState)
 	{
-		FWController = Cast<AFWController>(GetController());
+		AddInstanceComponent(FWPlayerState->GetItemManager());
+		ItemManager = FWPlayerState->GetItemManager();
 	}
 
 	Level = GetWorld()->GetName();
 
 	if (FWGameInstance && FWGameInstance.Get()->CurrentLoadedSave)
 	{
-		FMemoryReader PlayerReader = FMemoryReader(FWGameInstance->CurrentLoadedSave->PlayerData);
-		FArchive Ar = FArchive(PlayerReader);
-		Serialize(Ar);
+		if (!FWGameInstance->CurrentLoadedSave->PlayerData.IsEmpty())
+		{
+			FMemoryReader PlayerReader = FMemoryReader(FWGameInstance->CurrentLoadedSave->PlayerData);
+			FObjectAndNameAsStringProxyArchive Ar (PlayerReader, true);
+			Ar.ArIsSaveGame = true;
+			Serialize(Ar);
+		}
 	}
 
 	SetActorTransform(StablePositionUpdater->StablePosition, false, nullptr, ETeleportType::TeleportPhysics);
@@ -71,19 +79,22 @@ void AFWCharacter::BeginPlay()
 void AFWCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
+	if (FWGameInstance && FWGameInstance.Get()->CurrentLoadedSave)
+	{
+		ItemManager->SaveInventory(FWGameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory);
+		FMemoryWriter PlayerReader = FMemoryWriter(FWGameInstance->CurrentLoadedSave->PlayerData);
+		FObjectAndNameAsStringProxyArchive Ar = FObjectAndNameAsStringProxyArchive(PlayerReader, true);
+		Ar.SetIsSaving(true);
+		Ar.SetIsLoading(false);
+		Serialize(Ar);
+		FWGameInstance.Get()->SaveGame();
+	}
 }
 
 void AFWCharacter::BeginDestroy()
 {
 	Super::BeginDestroy();
-
-	if (FWGameInstance && FWGameInstance->CurrentLoadedSave)
-	{
-		FWGameInstance->CurrentLoadedSave->PlayerLevel = Level;
-		FWGameInstance->CurrentLoadedSave->bHasSavedLevel = true;
-		
-		FWGameInstance->SetShouldSaveGame(true);
-	}
 }
 
 FCollisionQueryParams AFWCharacter::GetIgnoreCharacterParams()
@@ -130,6 +141,16 @@ void AFWCharacter::Interact()
 	{
 		IInteractableActor *Interactible = Cast<IInteractableActor>(CurrentInteractible);
 		Interactible->Interact(this);
+	}
+}
+
+void AFWCharacter::Serialize(FArchive& Ar)
+{
+	Super::Serialize(Ar);
+
+	if (Ar.IsSaveGame())
+	{
+		PlayerStats->Serialize(Ar);
 	}
 }
 

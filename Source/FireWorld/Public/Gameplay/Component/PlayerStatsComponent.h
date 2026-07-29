@@ -16,14 +16,14 @@ public:
 	// Sets default values for this component's properties
 	UPlayerStatsComponent();
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Options)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, SaveGame, Category = Options)
 	float Health = 100.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Options)
 	float MaxHealth = Health;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Options)
 	float HealthRegenRate = 1;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Options)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, SaveGame, Category = Options)
 	float Stamina = 100.0f;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Options)
 	float MaxStamina = Stamina;
@@ -31,13 +31,21 @@ public:
 	float StaminaRegenRate = 1;
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION(BlueprintCallable, Category = Health)
+	float GetHealth() const {return Health;}
+	UFUNCTION(BlueprintCallable, Category = Health)
+	float GetMaxHealth() const {return MaxHealth;}
+	UFUNCTION(BlueprintCallable, Category = Stamina)
+	float GetStamina() const {return Stamina;}
+	UFUNCTION(BlueprintCallable, Category = Stamina)
+	float GetMaxStamina() const {return MaxStamina;}
+
 
 	UFUNCTION(BlueprintCallable, Category = Health)
 	void DoDamage(float Damage);

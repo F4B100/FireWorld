@@ -5,6 +5,7 @@
 
 #include "FWGameInstance.h"
 #include "Character/FWCharacter.h"
+#include "Character/FWPlayerState.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
 #include "Gameplay/Component/ItemManagerComponent.h"
@@ -14,8 +15,6 @@
 UWeaponManager::UWeaponManager()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
-	Owner = Cast<AFWCharacter>(GetOwner());
 }
 
 void UWeaponManager::StartFire()
@@ -38,7 +37,12 @@ void UWeaponManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ItemManager = Cast<AFWCharacter>(GetOwner())->GetItemManager();
+
+	Owner = Cast<AFWCharacter>(GetOwner());
+	if (Owner)
+	{
+		ItemManager = Owner->GetPlayerState<AFWPlayerState>()->GetItemManager();
+	}
 	if (ItemManager)
 	{
 		ItemManager->OnItemRemoved.AddUObject(
@@ -137,5 +141,15 @@ void UWeaponManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->TickWeapon(DeltaTime);
+	}
+}
+
+void UWeaponManager::Serialize(FArchive& Ar)
+{
+	Super::Serialize(Ar);
+
+	if (Ar.IsSaveGame() && Ar.IsLoading())
+	{
+		ChangeEquippedWeapon(CurrentWeaponIndex);
 	}
 }

@@ -41,6 +41,8 @@ public:
 	// Functions
 	UFWGameInstance();
 
+	void Init() override;
+
 	UFUNCTION(BlueprintCallable)
 	void SaveGame();
 	UFUNCTION(BlueprintCallable)
@@ -50,7 +52,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool DeleteSaveGame(const FString SaveName);
 	UFUNCTION(BlueprintCallable)
-	bool ChangeLoadedSaveGame(const FString SaveName);
+	bool ChangeLoadedSaveGame(const FString SaveName, UFWSaveGame *SaveGame = nullptr);
 	UFUNCTION(BlueprintCallable)
 	bool HasLoadedSaveGame() const;
 	UFUNCTION(BlueprintCallable)

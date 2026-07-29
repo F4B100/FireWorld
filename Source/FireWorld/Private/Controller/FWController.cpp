@@ -9,21 +9,17 @@
 #include "Engine/Engine.h"
 #include "HUD/FWCharacterHUD.h"
 #include "Save/FWSaveGame.h"
+#include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 #include "UserSettings/EnhancedInputUserSettings.h"
 
-
-// Sets default values
 AFWController::AFWController()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	FWGameInstance = Cast<UFWGameInstance>(GetGameInstance());
 }
 
-// Called when the game starts or when spawned
 void AFWController::BeginPlay()
 {
+	FWGameInstance = Cast<UFWGameInstance>(GetGameInstance());
 	Super::BeginPlay();
 	const FInputModeGameOnly InputMode;
 	SetInputMode(InputMode);
@@ -115,32 +111,44 @@ void AFWController::HandleLook(const FInputActionValue& InputActionValue)
 	}
 }
 
+void AFWController::HandleMenuOpen(const FInputActionValue& InputActionValue)
+{
+	if (FWHUD)
+	{
+		FWHUD.Get()->MainWidget.Get()->ToggleInventory();
+		if (FWHUD.Get()->MainWidget.Get()->IsInInventory())
+		{
+			const FInputModeUIOnly Input = FInputModeUIOnly();
+			SetShowMouseCursor(true);
+			SetInputMode(Input);
+			FWHUD.Get()->MainWidget->SetFocus();
+		} else
+		{
+			const FInputModeGameOnly Input = FInputModeGameOnly();
+			SetShowMouseCursor(false);
+			SetInputMode(Input);
+		}
+	}
+}
+
 void AFWController::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (FWGameInstance && FWGameInstance.Get()->GetShouldSaveGame())
-	{
-		FWGameInstance->SaveGame();
-
-		UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave;
-	}
 	if (FWGameInstance.Get()->CurrentLoadedSave)
 	{
 		UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave;
 
 		SaveGame->PlayerData.Empty();
 		FMemoryWriter PlayerWriter = FMemoryWriter(SaveGame->PlayerData);
-		FArchive Ar = FArchive(PlayerWriter);
+		FObjectAndNameAsStringProxyArchive Ar(PlayerWriter, true);
+		Ar.ArIsSaveGame = true;
 		FWCharacter->Serialize(Ar);
+	}
 
-		if (GEngine)
-		{
-			const FString Message = FString::Printf(TEXT("Player Level:%s\n"),
-				*SaveGame->PlayerLevel
-				);
-			GEngine->AddOnScreenDebugMessage(775218, 10.0f, FColor::Red, Message);
-		}
+	if (FWGameInstance && FWGameInstance.Get()->GetShouldSaveGame())
+	{
+		FWGameInstance->SaveGame();
 	}
 }
 
@@ -153,7 +161,10 @@ void AFWController::AcknowledgePossession(APawn* P)
 
 void AFWController::Interact(const FInputActionValue& InputActionValue)
 {
-	FWCharacter.Get()->Interact();
+	if (FWCharacter)
+	{
+		FWCharacter.Get()->Interact();
+	}
 }
 
 void AFWController::SetupInputComponent()
@@ -222,6 +233,11 @@ void AFWController::SetupInputComponent()
 		if (InteractAction)
 		{
 			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AFWController::Interact);
+		}
+
+		if (OpenMenuAction)
+		{
+			EnhancedInputComponent->BindAction(OpenMenuAction, ETriggerEvent::Started, this, &AFWController::HandleMenuOpen);
 		}
 	}
 }

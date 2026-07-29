@@ -7,10 +7,28 @@
 #include "Gameplay/Component/SavedInventory.h"
 #include "FWSaveGame.generated.h"
 
+USTRUCT(BlueprintType)
+struct FSerializedActorData
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<uint8> Data;
+};
+
+UENUM(BlueprintType)
+enum EGameDificulty
+{
+	GDIFICULTY_NONE UMETA(Hidden),
+	GDIFICULTY_EASY UMETA(DisplayName = "Easy"),
+	GDIFICULTY_NORMAL UMETA(DisplayName = "Normal"),
+	GDIFICULTY_HARD UMETA(DisplayName = "Hard")
+};
+
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class FIREWORLD_API UFWSaveGame : public USaveGame
 {
 	GENERATED_BODY()
@@ -20,15 +38,13 @@ public:
 	bool bHasPlayerData = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
 	TArray<uint8> PlayerData = TArray<uint8>();
-	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
-	FString PlayerLevel = FString();
-	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
-	bool bHasSavedLevel = false;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Locations")
-	TMap<FString, FTransform> SavedActorTransforms = TMap<FString, FTransform>();
 
 	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
-	FSavedInventory SavedInventory = FSavedInventory();
+	FSavedInventory SavedInventory;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Locations")
+	TMap<FString, FSerializedActorData> SavedActorData;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
+	TEnumAsByte<EGameDificulty> Dificulty = GDIFICULTY_NORMAL;
 };

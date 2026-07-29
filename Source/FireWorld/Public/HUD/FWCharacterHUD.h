@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "UI/FWCharacterUI/FWCharacterWidget.h"
+#include "UI/Player/FPPlayerUI.h"
 #include "FWCharacterHUD.generated.h"
 
 class UInteractableActor;
 class AFWController;
-class UFWCharacterWidget;
+class UFPPlayerUI;
 class UCommonUserWidget;
 /**
  *
@@ -21,15 +21,16 @@ class FIREWORLD_API AFWCharacterHUD : public AHUD
 
 public:
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UFWCharacterWidget> MainWidget = nullptr;
+	TObjectPtr<UFPPlayerUI> MainWidget = nullptr;
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<AFWController> FWController = nullptr;
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<AFWCharacter> FWCharacter = nullptr;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UFWCharacterWidget> MainWidgetClass = UFWCharacterWidget::StaticClass();
+	TSubclassOf<UFPPlayerUI> MainWidgetClass = UFPPlayerUI::StaticClass();
 
 protected:
 	virtual void BeginPlay() override;
-	void SwitchDisplayedWidget(TSubclassOf<UFWCharacterWidget> WidgetClass, FName WidgetName);
+	void SwitchDisplayedWidget(TSubclassOf<UFPPlayerUI> WidgetClass, FName WidgetName);
+	void ToggleInventory();
 };

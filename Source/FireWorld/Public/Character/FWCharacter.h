@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "FWCharacter.generated.h"
 
+class AFWPlayerState;
+class UFWSaveGame;
 class UInteractionManagerComponent;
 class AFWController;
 class UWeaponManager;
@@ -30,6 +32,8 @@ public:
 	bool bShouldReadSaveData = false;
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UFWGameInstance> FWGameInstance = nullptr;
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<AFWPlayerState> FWPlayerState = nullptr;
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<AFWController> FWController = nullptr;
 
@@ -101,4 +105,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Interact();
+
+	void Serialize(FArchive& Ar) override;
 };

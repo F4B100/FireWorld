@@ -7,6 +7,7 @@
 #include "Gameplay/Items/SavedItem.h"
 #include "ItemManagerComponent.generated.h"
 
+class AFWPlayerState;
 struct FSavedInventory;
 class UFWGameInstance;
 class AFWCharacter;
@@ -22,20 +23,18 @@ public:
 
 	UPROPERTY()
 	TObjectPtr<UFWGameInstance> GameInstance = nullptr;
+	UPROPERTY()
+	TArray<TObjectPtr<UFWItem>> Items = TArray<TObjectPtr<UFWItem>>();
 
 	virtual void BeginPlay() override;
-	void LoadInventory(FSavedInventory& Inventory);
 
 	UPROPERTY()
 	TObjectPtr<AFWCharacter> Owner;
 
-	UPROPERTY(BlueprintReadOnly)
-	TArray<TObjectPtr<UFWItem>> Items;
-
 	UFUNCTION(BlueprintCallable)
 	UFWItem *GetItem(int32 Index);
 	UFUNCTION(BlueprintCallable)
-	TArray<UFWItem *> GetAllItems();
+	TArray<UFWItem *> GetAllItems() const;
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAdded, UFWItem*, int32);
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemRemoved, UFWItem*, int32);
@@ -49,5 +48,7 @@ public:
 	void CollectItem(UFWItem *NewItem);
 
 	UFUNCTION(BlueprintCallable)
-	void SaveInventory(FSavedInventory& Inventory);
+	void SaveInventory(FSavedInventory& Inventory) const;
+	UFUNCTION(BlueprintCallable)
+	void LoadInventory(FSavedInventory& Inventory);
 };

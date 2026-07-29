@@ -47,6 +47,9 @@ void UProjectileWeapon::SwitchedOut()
 
 void UProjectileWeapon::ServerPerformFire_Implementation()
 {
+	ensure(OwningCharacter);
+	ensure(GetWorld());
+	ensure(GetWorld()->IsGameWorld());
 	if (ProjectileClass && OwningCharacter)
 	{
 		FVector CameraLocation;
@@ -62,6 +65,17 @@ void UProjectileWeapon::ServerPerformFire_Implementation()
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = OwningCharacter;
 			SpawnParams.Instigator = OwningCharacter->GetInstigator();
+
+			ensure(ProjectileClass);
+
+			UE_LOG(LogTemp, Warning, TEXT("ProjectileClass: %s"),
+				*GetNameSafe(ProjectileClass));
+
+			UE_LOG(LogTemp, Warning, TEXT("World: %s"),
+				*GetNameSafe(World));
+
+			UE_LOG(LogTemp, Warning, TEXT("Character: %s"),
+				*GetNameSafe(OwningCharacter.Get()));
 
 			if (AFWProjectile* Projectile = World->SpawnActor<AFWProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParams))
 			{

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Controller.h"
 #include "GameFramework/PlayerController.h"
 #include "FWController.generated.h"
 
@@ -41,6 +40,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
 	TObjectPtr<UInputAction> InteractAction = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
+	TObjectPtr<UInputAction> OpenMenuAction = nullptr;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
 	TObjectPtr<UInputMappingContext> InputMappingComponent = nullptr;
@@ -64,7 +66,6 @@ public:
 	virtual void AcknowledgePossession(APawn* P) override;
 
 protected:
-	void Interact(const FInputActionValue& InputActionValue);
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* APawn) override;
@@ -75,6 +76,8 @@ protected:
 	void HandleCrouch(const FInputActionValue& InputActionValue);
 	void HandleMove(const FInputActionValue& InputActionValue);
 	void HandleLook(const FInputActionValue& InputActionValue);
+	void HandleMenuOpen(const FInputActionValue& InputActionValue);
 	void StartShooting(const FInputActionValue& InputActionValue);
 	void StopShooting(const FInputActionValue& InputActionValue);
+	void Interact(const FInputActionValue& InputActionValue);
 };

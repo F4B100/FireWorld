@@ -18,12 +18,17 @@ class FIREWORLD_API UWeaponManager : public UActorComponent
 {
 	GENERATED_BODY()
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<AFWCharacter> Owner = nullptr;
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<UItemManagerComponent> ItemManager = nullptr;
 
+	UPROPERTY(BlueprintReadOnly, SaveGame, meta = (AllowPrivateAccess))
 	int32 CurrentWeaponIndex = -1;
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<UWeapon> CurrentWeapon = nullptr;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<UFWGameInstance> FWGameInstance = nullptr;
 
 public:
@@ -43,4 +48,6 @@ protected:
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
+
+	virtual void Serialize(FArchive& Ar) override;
 };

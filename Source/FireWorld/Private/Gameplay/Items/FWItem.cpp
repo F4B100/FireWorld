@@ -7,6 +7,10 @@
 #include "Serialization/MemoryWriter.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 
+UFWItem::UFWItem()
+{
+}
+
 void UFWItem::CreateSavedItem(FSavedItem& SavedItem)
 {
 	SavedItem.ItemClass = GetClass();
@@ -23,5 +27,8 @@ void UFWItem::CreateSavedItem(FSavedItem& SavedItem)
 void UFWItem::Serialize(FArchive& Ar)
 {
 	UObject::Serialize(Ar);
-	Ar << ItemName;
+	if (Ar.IsSaveGame())
+	{
+		Ar << ItemName;
+	}
 }

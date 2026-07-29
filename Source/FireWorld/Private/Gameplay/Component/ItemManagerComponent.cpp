@@ -4,6 +4,7 @@
 
 #include "FWGameInstance.h"
 #include "Character/FWCharacter.h"
+#include "Character/FWPlayerState.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
 #include "Gameplay/Items/FWItem.h"
@@ -22,11 +23,7 @@ void UItemManagerComponent::BeginPlay()
 	GameInstance = Cast<UFWGameInstance>(GetWorld()->GetGameInstance());
 	if (!GameInstance)
 	{
-		UE_LOG(LogTemp, Verbose, TEXT("g Could Not Get GameInstance"))
-	}
-	if (GameInstance && GameInstance.Get()->CurrentLoadedSave && GameInstance.Get()->CurrentLoadedSave)
-	{
-		LoadInventory(GameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory);
+		UE_LOG(LogTemp, Verbose, TEXT("Could Not Get GameInstance"))
 	}
 }
 
@@ -39,7 +36,7 @@ UFWItem *UItemManagerComponent::GetItem(int32 Index)
 	return nullptr;
 }
 
-TArray<UFWItem *> UItemManagerComponent::GetAllItems()
+TArray<UFWItem *> UItemManagerComponent::GetAllItems() const
 {
 	return Items;
 }
@@ -48,20 +45,11 @@ void UItemManagerComponent::CollectItem(UFWItem *NewItem)
 {
 	if (NewItem)
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(12576834, 10.0f, FColor::Magenta, NewItem->GetClass()->GetClassPathName().ToString());
-		}
 		OnItemAdded.Broadcast(NewItem, Items.Add(NewItem));
-		if (GameInstance.Get()->CurrentLoadedSave)
-		{
-			SaveInventory(GameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory);
-		}
-		GameInstance.Get()->SetShouldSaveGame(true);
 	}
 }
 
-void UItemManagerComponent::SaveInventory(FSavedInventory& Inventory)
+void UItemManagerComponent::SaveInventory(FSavedInventory& Inventory) const
 {
 	Inventory.Items.Empty();
 	for (const TObjectPtr<UFWItem>& I : Items)
@@ -75,9 +63,10 @@ void UItemManagerComponent::LoadInventory(FSavedInventory& Inventory)
 {
 	for (auto Item : Inventory.Items)
 	{
-		UClass *ItemClass = Item.ItemClass.LoadSynchronous();
+		UClass *ItemClass = Item.ItemClass;
 		UFWItem *NewItem = NewObject<UFWItem>(this, ItemClass);
 		FMemoryReader Reader(Item.SerializedData);
 		NewItem->Serialize(Reader);
+		Items.Add(NewItem);
 	}
 }

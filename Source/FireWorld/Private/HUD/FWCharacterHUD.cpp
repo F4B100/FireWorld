@@ -7,7 +7,7 @@
 #include "Character/FWCharacter.h"
 #include "Controller/FWController.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "UI/FWCharacterUI/FWPlayerInteractionWidget.h"
+#include "UI/Player/FWPlayerInteractionWidget.h"
 
 void AFWCharacterHUD::BeginPlay()
 {
@@ -24,7 +24,7 @@ void AFWCharacterHUD::BeginPlay()
 	SwitchDisplayedWidget(MainWidgetClass, TEXT("Character Main Widget"));
 }
 
-void AFWCharacterHUD::SwitchDisplayedWidget(TSubclassOf<UFWCharacterWidget> WidgetClass, FName WidgetName)
+void AFWCharacterHUD::SwitchDisplayedWidget(TSubclassOf<UFPPlayerUI> WidgetClass, FName WidgetName)
 {
 	if (FWController)
 	{
@@ -32,7 +32,12 @@ void AFWCharacterHUD::SwitchDisplayedWidget(TSubclassOf<UFWCharacterWidget> Widg
 		{
 			MainWidget->RemoveFromParent();
 		}
-		MainWidget = CreateWidget<UFWCharacterWidget>(FWController, WidgetClass, WidgetName);
+		MainWidget = CreateWidget<UFPPlayerUI>(FWController, WidgetClass, WidgetName);
 		MainWidget->AddToViewport();
 	}
+}
+
+void AFWCharacterHUD::ToggleInventory()
+{
+	MainWidget.Get()->ToggleInventory();
 }
