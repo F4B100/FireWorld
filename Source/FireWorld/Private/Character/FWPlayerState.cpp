@@ -18,7 +18,7 @@ void AFWPlayerState::BeginPlay()
 
 	FWGameInstance = Cast<UFWGameInstance>(GetGameInstance());
 
-	if (ItemManagerComponent && FWGameInstance)
+	if (ItemManagerComponent && FWGameInstance && FWGameInstance.Get()->CurrentLoadedSave)
 	{
 		ItemManagerComponent->LoadInventory(FWGameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory);
 	}

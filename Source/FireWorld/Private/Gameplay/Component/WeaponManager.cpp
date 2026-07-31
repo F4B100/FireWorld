@@ -41,7 +41,10 @@ void UWeaponManager::BeginPlay()
 	Owner = Cast<AFWCharacter>(GetOwner());
 	if (Owner)
 	{
-		ItemManager = Owner->GetPlayerState<AFWPlayerState>()->GetItemManager();
+		if (const TObjectPtr<AFWPlayerState> PlayerState = Owner->GetPlayerState<AFWPlayerState>())
+		{
+			ItemManager = PlayerState->GetItemManager();
+		}
 	}
 	if (ItemManager)
 	{
