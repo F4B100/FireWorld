@@ -37,17 +37,16 @@ public:
 	void StartFire();
 	void EndFire();
 
-protected:
 	virtual void BeginPlay() override;
+
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+							   FActorComponentTickFunction* ThisTickFunction) override;
+
+	virtual void Serialize(FArchive& Ar) override;
+protected:
 	void HandleItemRemoved(UFWItem* Item, int32 Index);
 	void HandleItemAdded(UFWItem* Item, int32 Index);
 	void HandleItemChanged(int32 Old, int32 New);
 
 	void ChangeEquippedWeapon(int32 Index, UWeapon *Weapon = nullptr);
-
-public:
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
-
-	virtual void Serialize(FArchive& Ar) override;
 };

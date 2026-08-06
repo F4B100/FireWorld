@@ -45,6 +45,10 @@ void UFWGameInstance::Init()
 
 void UFWGameInstance::SaveGame()
 {
+	if (LoadedSaveName.IsEmpty())
+	{
+		return;
+	}
 	if (!CurrentLoadedSave)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Tried to Save a null LoadedSave"));
@@ -70,6 +74,8 @@ bool UFWGameInstance::CreateSaveGame(const FString SaveName)
 	ChangeLoadedSaveGame(SaveName);
 	SaveGame();
 	SaveSaveNames();
+	OnSaveGameAdded.Broadcast(SaveName, CurrentLoadedSave);
+
 	if (CurrentLoadedSave == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to create save object in FW Game Instance."));
@@ -86,6 +92,7 @@ bool UFWGameInstance::DeleteSaveGame(const FString SaveName)
 	}
 	UGameplayStatics::DeleteGameInSlot(SaveName, 0);
 	SaveNames.Get()->SaveNames.Remove(SaveName);
+	OnSaveGameRemoved.Broadcast(SaveName);
 	return true;
 }
 

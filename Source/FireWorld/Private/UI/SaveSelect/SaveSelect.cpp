@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
 #include "Components/ScrollBox.h"
+#include "Save/FWSaveGame.h"
 #include "Save/FWSaveNames.h"
 #include "UI/SaveSelect/SaveInfo.h"
 
@@ -38,13 +39,32 @@ void USaveSelect::NativeConstruct()
 			NewSave->LoadSaveInfo(Name);
 			SavesContainer.Get()->AddChild(NewSave);
 		}
+		FWGameInstance->OnSaveGameAdded.AddUObject(
+			this,
+			&USaveSelect::OnSaveGameAdded
+			);
 	}
 }
 
 void USaveSelect::OnCreateSaveClicked()
 {
-	if (SaveName && !SaveName.Get()->GetText().IsEmpty())
+	if (SaveNameTextBox && !SaveNameTextBox.Get()->GetText().IsEmpty())
 	{
-		FWGameInstance.Get()->CreateSaveGame(SaveName.Get()->GetText().ToString());
+		FWGameInstance.Get()->CreateSaveGame(SaveNameTextBox.Get()->GetText().ToString());
 	}
+}
+void USaveSelect::OnSaveGameAdded(const FString& SaveName, TObjectPtr<UFWSaveGame> SaveGame)
+{
+	USaveInfo *NewSave;
+	if (SaveInfoClass)
+	{
+		NewSave = CreateWidget<USaveInfo>(this, SaveInfoClass);
+	}
+	else
+	{
+		NewSave = CreateWidget<USaveInfo>(this, USaveInfo::StaticClass());
+	}
+	NewSave->LevelToLoad = LevelToLoad;
+	NewSave->LoadSaveInfo(SaveName);
+	SavesContainer.Get()->AddChild(NewSave);
 }

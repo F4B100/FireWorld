@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
+#include "Save/FWSaveGame.h"
 #include "SaveSelect.generated.h"
 
 class UScrollBox;
@@ -29,7 +30,7 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UScrollBox> SavesContainer = nullptr;
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UEditableTextBox> SaveName = nullptr;
+	TObjectPtr<UEditableTextBox> SaveNameTextBox = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<USaveInfo> SaveInfoClass = nullptr;
@@ -37,7 +38,10 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UWorld> LevelToLoad = nullptr;
 
-	void NativeConstruct() override;
 	UFUNCTION()
 	void OnCreateSaveClicked();
+	void OnSaveGameAdded(const FString& SaveName, TObjectPtr<UFWSaveGame> SaveGame);
+
+protected:
+	virtual void NativeConstruct() override;
 };

@@ -62,4 +62,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UFWSaveGame *GetSaveGame(const FString SaveName);
+
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveGameAdded, const FString&, TObjectPtr<UFWSaveGame>)
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnSaveGameRemoved, const FString&)
+
+
+	FOnSaveGameAdded OnSaveGameAdded;
+	FOnSaveGameRemoved OnSaveGameRemoved;
 };
