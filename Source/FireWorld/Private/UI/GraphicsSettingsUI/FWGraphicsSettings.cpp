@@ -4,8 +4,10 @@
 #include "UI/GraphicsSettingsUI/FWGraphicsSettings.h"
 
 #include "AnalogSlider.h"
+#include "../../../../../Plugins/FWUI/Source/FWUI/Public/text/FWNumericEditableText.h"
 #include "Components/ComboBoxKey.h"
 #include "Components/EditableText.h"
+#include "Engine/Engine.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Save/FWUserSettings.h"
@@ -30,7 +32,6 @@ void UFWGraphicsSettings::SetScreenRes(FIntPoint InScreenRes, bool bOverrideComm
 	if(GameUserSettings != nullptr)
 	{
 		GameUserSettings->SetScreenResolution(InScreenRes);
-		GameUserSettings->SetFullscreenMode(EWindowMode::Windowed);
 		GameUserSettings->ApplyResolutionSettings(bOverrideCommandLine);
 	}
 }
@@ -45,13 +46,29 @@ void UFWGraphicsSettings::ConfirmGameUserSettings(bool bOverrideCommandLine)
 
 void UFWGraphicsSettings::UpdateFrameRateLimitValue(float NewValue)
 {
-	if (GEngine)
+	if(GameUserSettings != nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(123153316, 1.0f, FColor::Yellow, FString::Printf(TEXT("Frame limit: %f\n"), NewValue));
+		GameUserSettings.Get()->SetFrameRateLimit(NewValue);
+		ConfirmGameUserSettings(true);
 	}
-	GameUserSettings.Get()->SetFrameRateLimit(NewValue);
-	GameUserSettings->ApplySettings(true);
-	GameUserSettings->SaveSettings();
+}
+
+void UFWGraphicsSettings::HandleOnValueChangedFrameRateSlider(float Value)
+{
+	UpdateFrameRateLimitValue(Value);
+	
+	if (FPSEditableText)
+	{
+		FPSEditableText->SetTextValue(Value);
+	}
+}
+
+void UFWGraphicsSettings::HandleOnValueChangedFpsEditableText(float Value)
+{
+	if (FrameRateSlider)
+	{
+		FrameRateSlider->SetValue(Value);
+	}
 }
 
 
@@ -111,8 +128,13 @@ void UFWGraphicsSettings::NativeConstruct()
 	if (FrameRateSlider)
 	{
 		FrameRateSlider.Get()->SetValue(GameUserSettings->GetFrameRateLimit());
-		FrameRateSlider->OnValueChanged.AddDynamic(this, &UFWGraphicsSettings::UpdateFrameRateLimitValue);
+		FrameRateSlider->OnValueChanged.AddDynamic(this, &UFWGraphicsSettings::HandleOnValueChangedFrameRateSlider);
 	}
+	if (FPSEditableText)
+	{
+		FPSEditableText.Get()->OnValueChanged.AddDynamic(this, &UFWGraphicsSettings::HandleOnValueChangedFpsEditableText);
+	}
+	
 }
 
 void UFWGraphicsSettings::BeginDestroy()

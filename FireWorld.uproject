@@ -49,6 +49,10 @@
 		{
 			"Name": "MeshPartitionWater",
 			"Enabled": true
+		},
+		{
+			"Name": "FWUI",
+			"Enabled": true
 		}
 	]
 }

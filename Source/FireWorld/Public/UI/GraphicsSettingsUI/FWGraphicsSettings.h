@@ -6,6 +6,7 @@
 #include "CommonUserWidget.h"
 #include "FWGraphicsSettings.generated.h"
 
+class UFWNumericEditableText;
 class UAnalogSlider;
 class UTextBlock;
 class UEditableText;
@@ -15,7 +16,7 @@ class UComboBoxString;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class FIREWORLD_API UFWGraphicsSettings : public UCommonUserWidget
 {
 	GENERATED_BODY()
@@ -25,6 +26,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UAnalogSlider> FrameRateSlider = nullptr;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<UFWNumericEditableText> FPSEditableText = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	TObjectPtr<UFWUserSettings> GameUserSettings = nullptr;
@@ -37,7 +41,6 @@ public:
 
 	/**
 	 * Checks for available Screen Resolutions
-	 * @param ScreenResOpts A reference to the data container with which to store the Screen Resolutions
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Graphics Options")
 	void UpdateScreenResOpts();
@@ -59,6 +62,11 @@ public:
 
 	UFUNCTION(Blueprintable)
 	void UpdateFrameRateLimitValue(float NewValue);
+	
+	UFUNCTION()
+	void HandleOnValueChangedFrameRateSlider(float Value);
+	UFUNCTION()
+	void HandleOnValueChangedFpsEditableText(float Value);
 
 protected:
 	virtual void NativePreConstruct() override;

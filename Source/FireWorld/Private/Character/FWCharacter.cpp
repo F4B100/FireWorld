@@ -73,7 +73,6 @@ void AFWCharacter::BeginPlay()
 		}
 	}
 
-	SetActorTransform(StablePositionUpdater->StablePosition, false, nullptr, ETeleportType::TeleportPhysics);
 }
 
 void AFWCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
