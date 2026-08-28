@@ -1,12 +1,15 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "text/FWNumericEditableText.h"
+#include "text/FWEditableTextNumeric.h"
+
+// Fill out your copyright notice in the Description page of Project Settings.	
 
 #include "Blueprint/WidgetTree.h"
+#include "Components/EditableText.h"
 #include "Misc/DefaultValueHelper.h"
 
-void UFWNumericEditableText::HandleOnTextChanged(const FText& Text)
+void UFWEditableTextNumeric::HandleOnTextChanged(const FText& Text)
 {
 	if (Text.IsNumeric() || Text.IsEmpty())
 	{
@@ -41,7 +44,7 @@ void UFWNumericEditableText::HandleOnTextChanged(const FText& Text)
 	}
 }
 
-void UFWNumericEditableText::HandleOnTextCommitted(const FText& Text, ETextCommit::Type CommitType)
+void UFWEditableTextNumeric::HandleOnTextCommitted(const FText& Text, ETextCommit::Type CommitType)
 {
 	if (Text.IsNumeric())
 	{
@@ -51,18 +54,19 @@ void UFWNumericEditableText::HandleOnTextCommitted(const FText& Text, ETextCommi
 	}
 }
 
-void UFWNumericEditableText::NativePreConstruct()
+void UFWEditableTextNumeric::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-
+	
 	if (EditableText)
 	{
-		EditableText.Get()->OnTextChanged.AddUniqueDynamic(this, &UFWNumericEditableText::HandleOnTextChanged);
-		EditableText.Get()->OnTextCommitted.AddUniqueDynamic(this, &UFWNumericEditableText::HandleOnTextCommitted);
+		EditableText->OnTextChanged.AddUniqueDynamic(this, &UFWEditableTextNumeric::HandleOnTextChanged);
+
+		EditableText->OnTextCommitted.AddUniqueDynamic(this, &UFWEditableTextNumeric::HandleOnTextCommitted);
 	}
 }
 
-void UFWNumericEditableText::SetTextValue(float Value)
+void UFWEditableTextNumeric::SetTextValue(float Value)
 {
 	if (bShouldClampValue)
 	{

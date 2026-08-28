@@ -23,7 +23,8 @@ public class FireWorld : ModuleRules
 			"SlateCore",
 			"OnlineSubsystem",
 			"UMGEditor",
-			"PCG"
+			"PCG",
+			"FWUI"
 		]);
 		
 		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true

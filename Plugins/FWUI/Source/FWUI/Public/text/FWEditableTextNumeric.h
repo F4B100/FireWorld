@@ -1,20 +1,17 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "Components/EditableText.h"
-#include "FWNumericEditableText.generated.h"
+#include "FWEditableTextNumeric.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnValueChanged, float, Value);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnValueCommitted, float, Value, ETextCommit::Type, CommitMethod);
-
+class UEditableText;
 /**
  * 
  */
 UCLASS()
-class FWUI_API UFWNumericEditableText : public UCommonUserWidget
+class FWUI_API UFWEditableTextNumeric : public UCommonUserWidget
 {
 	GENERATED_BODY()
 	
@@ -46,6 +43,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void SetTextValue(float Value);
+	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnValueChanged, float, Value);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnValueCommitted, float, Value, ETextCommit::Type, CommitMethod);
 
 	UPROPERTY(BlueprintAssignable, Category="Widget Event", meta=(DisplayName="OnValueChanged (Numeric Editable Text)"))
 	FOnValueChanged OnValueChanged;

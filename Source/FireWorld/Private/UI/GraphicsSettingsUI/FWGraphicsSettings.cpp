@@ -4,9 +4,8 @@
 #include "UI/GraphicsSettingsUI/FWGraphicsSettings.h"
 
 #include "AnalogSlider.h"
-#include "../../../../../Plugins/FWUI/Source/FWUI/Public/text/FWNumericEditableText.h"
+#include "text/FWEditableTextNumeric.h"
 #include "Components/ComboBoxKey.h"
-#include "Components/EditableText.h"
 #include "Engine/Engine.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -63,7 +62,7 @@ void UFWGraphicsSettings::HandleOnValueChangedFrameRateSlider(float Value)
 	}
 }
 
-void UFWGraphicsSettings::HandleOnValueChangedFpsEditableText(float Value)
+void UFWGraphicsSettings::HandleOnValueCommitedFpsEditableText(float Value)
 {
 	if (FrameRateSlider)
 	{
@@ -96,6 +95,9 @@ void UFWGraphicsSettings::NativePreConstruct()
 	GameUserSettings->ApplySettings(true);
 
 	GameUserSettings->ValidateSettings();
+	
+	FrameRateSlider->SetValue(GameUserSettings->GetFrameRateLimit());
+	FPSEditableText->SetTextValue(GameUserSettings->GetFrameRateLimit());
 }
 
 void UFWGraphicsSettings::NativeConstruct()
@@ -127,12 +129,11 @@ void UFWGraphicsSettings::NativeConstruct()
 
 	if (FrameRateSlider)
 	{
-		FrameRateSlider.Get()->SetValue(GameUserSettings->GetFrameRateLimit());
-		FrameRateSlider->OnValueChanged.AddDynamic(this, &UFWGraphicsSettings::HandleOnValueChangedFrameRateSlider);
+		FrameRateSlider->OnValueChanged.AddUniqueDynamic(this, &UFWGraphicsSettings::HandleOnValueChangedFrameRateSlider);
 	}
 	if (FPSEditableText)
 	{
-		FPSEditableText.Get()->OnValueChanged.AddDynamic(this, &UFWGraphicsSettings::HandleOnValueChangedFpsEditableText);
+		FPSEditableText.Get()->OnValueCommitted.AddUniqueDynamic(this, &UFWGraphicsSettings::HandleOnValueCommitedFpsEditableText);
 	}
 	
 }

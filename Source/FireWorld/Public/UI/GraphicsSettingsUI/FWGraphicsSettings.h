@@ -6,7 +6,7 @@
 #include "CommonUserWidget.h"
 #include "FWGraphicsSettings.generated.h"
 
-class UFWNumericEditableText;
+class UFWEditableTextNumeric;
 class UAnalogSlider;
 class UTextBlock;
 class UEditableText;
@@ -28,7 +28,7 @@ public:
 	TObjectPtr<UAnalogSlider> FrameRateSlider = nullptr;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	TObjectPtr<UFWNumericEditableText> FPSEditableText = nullptr;
+	TObjectPtr<UFWEditableTextNumeric> FPSEditableText = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	TObjectPtr<UFWUserSettings> GameUserSettings = nullptr;
@@ -66,7 +66,7 @@ public:
 	UFUNCTION()
 	void HandleOnValueChangedFrameRateSlider(float Value);
 	UFUNCTION()
-	void HandleOnValueChangedFpsEditableText(float Value);
+	void HandleOnValueCommitedFpsEditableText(float Value);
 
 protected:
 	virtual void NativePreConstruct() override;
