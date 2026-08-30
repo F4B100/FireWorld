@@ -13,30 +13,8 @@ void UFWEditableTextNumeric::HandleOnTextChanged(const FText& Text)
 {
 	if (Text.IsNumeric() || Text.IsEmpty())
 	{
-		if (bShouldClampValue)
-		{
-			float Value = 0.0f;
-			if (!Text.IsEmpty())
-			{
-				FDefaultValueHelper::ParseFloat(Text.ToString(), Value);
-			}
-			Value = FMath::Clamp(Value, MinimumValue, MaximumValue);
-			FFormatOrderedArguments  Args;
-			Args.Add(FFormatArgumentValue(Value));
-			FText NewText = FText::Format(FText::FromString(TEXT("{0}")),Args);
-			EditableText->SetText(NewText);
-			LastGoodText = NewText;
-			OnValueChanged.Broadcast(Value);
-		}
-		else
-		{
-			EditableText->SetText(Text);
-			LastGoodText = Text;
-			
-			float Value = 0.0f;
-			FDefaultValueHelper::ParseFloat(Text.ToString(), Value);
-			OnValueChanged.Broadcast(Value);
-		}
+		EditableText->SetText(Text);
+		LastGoodText = Text;
 	}
 	else
 	{
@@ -44,14 +22,18 @@ void UFWEditableTextNumeric::HandleOnTextChanged(const FText& Text)
 	}
 }
 
-void UFWEditableTextNumeric::HandleOnTextCommitted(const FText& Text, ETextCommit::Type CommitType)
+void UFWEditableTextNumeric::HandleOnTextCommitted(const FText& Text, ETextCommit::Type CommitType) const
 {
-	if (Text.IsNumeric())
+	
+	float Value = 0.0f;
+	FDefaultValueHelper::ParseFloat(Text.ToString(), Value);
+	OnValueCommitted.Broadcast(Value, CommitType);
+	if (bShouldClampValue)
 	{
-		float Value = 0.0f;
-		FDefaultValueHelper::ParseFloat(Text.ToString(), Value);
-		OnValueCommitted.Broadcast(Value, CommitType);
+		Value = FMath::Clamp(Value, MinimumValue, MaximumValue);
 	}
+	
+	OnValueCommitted.Broadcast(Value, CommitType);
 }
 
 void UFWEditableTextNumeric::NativePreConstruct()

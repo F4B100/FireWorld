@@ -23,7 +23,7 @@ class FWUI_API UFWEditableTextNumeric : public UCommonUserWidget
 	UFUNCTION()
 	void HandleOnTextChanged(const FText& Text);
 	UFUNCTION()
-	void HandleOnTextCommitted(const FText& Text, ETextCommit::Type CommitType);
+	void HandleOnTextCommitted(const FText& Text, ETextCommit::Type CommitType) const;
 
 protected:
 	virtual void NativePreConstruct() override;
@@ -44,11 +44,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetTextValue(float Value);
 	
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnValueChanged, float, Value);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnValueCommitted, float, Value, ETextCommit::Type, CommitMethod);
 
-	UPROPERTY(BlueprintAssignable, Category="Widget Event", meta=(DisplayName="OnValueChanged (Numeric Editable Text)"))
-	FOnValueChanged OnValueChanged;
 	UPROPERTY(BlueprintAssignable, Category="Widget Event", meta=(DisplayName="OnValueCommitted (Numeric Editable Text)"))
 	FOnValueCommitted OnValueCommitted;
 };

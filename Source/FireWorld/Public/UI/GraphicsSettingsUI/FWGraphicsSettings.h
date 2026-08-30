@@ -35,6 +35,11 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Data")
 	TMap<FName, FIntPoint> Resolutions = TMap<FName, FIntPoint>();
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Options")
+	int FpsMin = 30;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Options")
+	int FpsMax = 1000;
 
 	UFUNCTION(Blueprintable)
 	void SelectionChanged(FName SelectedKey, ESelectInfo::Type SelectionType);
@@ -66,7 +71,7 @@ public:
 	UFUNCTION()
 	void HandleOnValueChangedFrameRateSlider(float Value);
 	UFUNCTION()
-	void HandleOnValueCommitedFpsEditableText(float Value, ETextCommit::Type CommitMethod);
+	void HandleOnValueCommitedFpsEditableText(float Value, ETextCommit::Type CommitMethod) const;
 
 protected:
 	virtual void NativePreConstruct() override;

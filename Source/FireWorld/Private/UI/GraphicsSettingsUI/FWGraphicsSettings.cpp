@@ -62,7 +62,7 @@ void UFWGraphicsSettings::HandleOnValueChangedFrameRateSlider(float Value)
 	}
 }
 
-void UFWGraphicsSettings::HandleOnValueCommitedFpsEditableText(float Value, ETextCommit::Type CommitMethod)
+void UFWGraphicsSettings::HandleOnValueCommitedFpsEditableText(float Value,ETextCommit::Type CommitMethod) const
 {
 	if (FrameRateSlider)
 	{
