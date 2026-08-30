@@ -6,6 +6,7 @@
 #include "CommonUserWidget.h"
 #include "FWGraphicsSettings.generated.h"
 
+class UCheckBox;
 class UFWEditableTextNumeric;
 class UAnalogSlider;
 class UTextBlock;
@@ -22,11 +23,16 @@ class FIREWORLD_API UFWGraphicsSettings : public UCommonUserWidget
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<UComboBoxKey> FullScreenDropdown = nullptr;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UComboBoxKey> ScreenResDropdown = nullptr;
-
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<UCheckBox> VsyncCheckBox = nullptr;
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UAnalogSlider> FrameRateSlider = nullptr;
-	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UFWEditableTextNumeric> FPSEditableText = nullptr;
 
@@ -70,6 +76,10 @@ public:
 	
 	UFUNCTION()
 	void HandleOnValueChangedFrameRateSlider(float Value);
+	
+	UFUNCTION()
+	void HandleOnCheckStateChangedVsyncCheckBox(bool bIsChecked);
+	
 	UFUNCTION()
 	void HandleOnValueCommitedFpsEditableText(float Value, ETextCommit::Type CommitMethod) const;
 

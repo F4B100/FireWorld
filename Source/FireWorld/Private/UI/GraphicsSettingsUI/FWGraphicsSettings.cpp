@@ -4,6 +4,7 @@
 #include "UI/GraphicsSettingsUI/FWGraphicsSettings.h"
 
 #include "AnalogSlider.h"
+#include "Components/CheckBox.h"
 #include "text/FWEditableTextNumeric.h"
 #include "Components/ComboBoxKey.h"
 #include "Engine/Engine.h"
@@ -23,7 +24,6 @@ void UFWGraphicsSettings::UpdateScreenResOpts()
 		FString KeyName = FString::Printf(TEXT("%i x %i"), SupportedScreenResolution.X, SupportedScreenResolution.Y);
 		Resolutions.Emplace(FName(KeyName), SupportedScreenResolution);
 	}
-	Resolutions.Emplace(FName(GameUserSettings->GetScreenResolution().ToString()), GameUserSettings->GetScreenResolution());
 }
 
 void UFWGraphicsSettings::SetScreenRes(FIntPoint InScreenRes, bool bOverrideCommandLine)
@@ -60,6 +60,14 @@ void UFWGraphicsSettings::HandleOnValueChangedFrameRateSlider(float Value)
 	{
 		FPSEditableText->SetTextValue(Value);
 	}
+}
+
+void UFWGraphicsSettings::HandleOnCheckStateChangedVsyncCheckBox(bool bIsChecked)
+{
+	if (GameUserSettings)
+	{
+		GameUserSettings->SetVSyncEnabled(bIsChecked);
+	}	
 }
 
 void UFWGraphicsSettings::HandleOnValueCommitedFpsEditableText(float Value,ETextCommit::Type CommitMethod) const
@@ -107,14 +115,16 @@ void UFWGraphicsSettings::NativeConstruct()
 	{
 		ScreenResDropdown.Get()->ClearOptions();
 		ScreenResDropdown.Get()->OnSelectionChanged.AddDynamic(this, &UFWGraphicsSettings::SelectionChanged);
-
+		
+		GameUserSettings.Displa
 		UpdateScreenResOpts();
 
 		for (const auto Opt : Resolutions)
 		{
 			ScreenResDropdown.Get()->AddOption(Opt.Key);
 		}
-		FName Current = FName(GameUserSettings->GetScreenResolution().ToString());
+		FIntPoint CurrentRes = GameUserSettings->GetScreenResolution();
+		FName Current = FName(FString::Printf(TEXT("%i x %i"), CurrentRes.X, CurrentRes.Y));
 		if (Resolutions.Contains(Current))
 		{
 			ScreenResDropdown.Get()->SetSelectedOption(Current);
@@ -125,6 +135,12 @@ void UFWGraphicsSettings::NativeConstruct()
 			ScreenResDropdown.Get()->AddOption(Current);
 			ScreenResDropdown.Get()->SetSelectedOption(Current);
 		}
+	}
+
+	if (VsyncCheckBox)
+	{
+		
+		VsyncCheckBox->OnCheckStateChanged.AddUniqueDynamic(this, &UFWGraphicsSettings::HandleOnCheckStateChangedVsyncCheckBox);
 	}
 
 	if (FrameRateSlider)
