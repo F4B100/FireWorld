@@ -66,7 +66,7 @@ public:
 	UFUNCTION()
 	void HandleOnValueChangedFrameRateSlider(float Value);
 	UFUNCTION()
-	void HandleOnValueCommitedFpsEditableText(float Value);
+	void HandleOnValueCommitedFpsEditableText(float Value, ETextCommit::Type CommitMethod);
 
 protected:
 	virtual void NativePreConstruct() override;
