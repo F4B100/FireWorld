@@ -10,6 +10,7 @@
 #include "Engine/Engine.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "option/FWOptionSelector.h"
 #include "Save/FWUserSettings.h"
 
 void UFWGraphicsSettings::UpdateScreenResOpts()
@@ -111,29 +112,26 @@ void UFWGraphicsSettings::NativePreConstruct()
 void UFWGraphicsSettings::NativeConstruct()
 {
 	Super::NativeConstruct();
-	if (ScreenResDropdown)
+	if (ScreenResSelection)
 	{
-		ScreenResDropdown.Get()->ClearOptions();
-		ScreenResDropdown.Get()->OnSelectionChanged.AddDynamic(this, &UFWGraphicsSettings::SelectionChanged);
 		
-		GameUserSettings.Displa
 		UpdateScreenResOpts();
 
 		for (const auto Opt : Resolutions)
 		{
-			ScreenResDropdown.Get()->AddOption(Opt.Key);
+			ScreenResSelection.Get()->AddOption({.Name = Opt.Key.ToString(), .UserData = nullptr});
 		}
 		FIntPoint CurrentRes = GameUserSettings->GetScreenResolution();
 		FName Current = FName(FString::Printf(TEXT("%i x %i"), CurrentRes.X, CurrentRes.Y));
 		if (Resolutions.Contains(Current))
 		{
-			ScreenResDropdown.Get()->SetSelectedOption(Current);
+			ScreenResSelection.Get()->SetSelected(Current.ToString());
 		}
 		else
 		{
 			Resolutions.Emplace(Current, GameUserSettings->GetScreenResolution());
-			ScreenResDropdown.Get()->AddOption(Current);
-			ScreenResDropdown.Get()->SetSelectedOption(Current);
+			ScreenResSelection.Get()->AddOption({.Name = Current.ToString(), .UserData = nullptr});
+			ScreenResSelection.Get()->SetSelected(Current.ToString());
 		}
 	}
 

@@ -6,6 +6,7 @@
 #include "CommonUserWidget.h"
 #include "FWGraphicsSettings.generated.h"
 
+class UFWOptionSelector;
 class UCheckBox;
 class UFWEditableTextNumeric;
 class UAnalogSlider;
@@ -23,10 +24,10 @@ class FIREWORLD_API UFWGraphicsSettings : public UCommonUserWidget
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	TObjectPtr<UComboBoxKey> FullScreenDropdown = nullptr;
+	TObjectPtr<UFWOptionSelector> FullScreenSelection = nullptr;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	TObjectPtr<UComboBoxKey> ScreenResDropdown = nullptr;
+	TObjectPtr<UFWOptionSelector> ScreenResSelection = nullptr;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UCheckBox> VsyncCheckBox = nullptr;
