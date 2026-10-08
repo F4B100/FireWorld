@@ -53,6 +53,8 @@ class FWUI_API UFWOptionSelector : public UCommonUserWidget
 	UPROPERTY()
 	float CurrentOffsetTime = 0.0f;
 	UPROPERTY()
+	float CurrentOffsetStart = 0.0f;
+	UPROPERTY()
 	float CurrentOffset = 0.0f;
 	UPROPERTY()
 	int32 InFocusIndex = 0;

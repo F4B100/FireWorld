@@ -12,6 +12,20 @@
 
 class UWidgetBlueprint;
 
+void UFWKeysMenu::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+	if (IsDesignTime())
+	{
+		for (int i = 0; i < 10; ++i)
+		{
+			TObjectPtr<URemapableKey> NewKeyWidget = CreateWidget<URemapableKey>(KeyPanel, RemapableKeyWidgetClass);
+			
+			KeyPanel->AddChild(NewKeyWidget);
+		}
+	}
+}
+
 void UFWKeysMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -78,7 +92,7 @@ void UFWKeysMenu::NativeConstruct()
 			continue;
 		}
 
-		TObjectPtr<URemapableKey> NewKeyWidget = CreateWidget<URemapableKey>(GetWorld(), RemapableKeyWidgetClass);
+		TObjectPtr<URemapableKey> NewKeyWidget = CreateWidget<URemapableKey>(KeyPanel, RemapableKeyWidgetClass);
 
 		NewKeyWidget.Get()->KeyMapping = MappingRow.Mappings.Get(FSetElementId::FromInteger(0));
 		NewKeyWidget.Get()->PlayerSettings = InputSettings;

@@ -30,5 +30,6 @@ public:
 	TSubclassOf<URemapableKey> RemapableKeyWidgetClass = nullptr;
 
 protected:
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 };

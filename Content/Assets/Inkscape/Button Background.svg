@@ -27,39 +27,46 @@
      inkscape:pagecheckerboard="1"
      inkscape:deskcolor="#505050"
      inkscape:document-units="px"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="226.27417"
-     inkscape:cy="333.7544"
-     inkscape:window-width="2560"
-     inkscape:window-height="1494"
-     inkscape:window-x="-28160"
-     inkscape:window-y="-32000"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
+     inkscape:zoom="0.70710678"
+     inkscape:cx="217.78889"
+     inkscape:cy="255.26555"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="2552"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:export-bgcolor="#00000000" />
   <defs
      id="defs1">
     <linearGradient
-       id="linearGradient1"
+       id="linearGradient6"
        inkscape:collect="always">
       <stop
-         style="stop-color:#00feff;stop-opacity:1;"
-         offset="0.17741935"
-         id="stop1" />
+         style="stop-color:#cccccc;stop-opacity:0.59663868;"
+         offset="0"
+         id="stop7" />
       <stop
-         style="stop-color:#35ca8d;stop-opacity:1;"
+         style="stop-color:#999999;stop-opacity:0.5;"
          offset="1"
+         id="stop8" />
+    </linearGradient>
+    <linearGradient
+       id="swatch2"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#39ff00;stop-opacity:1;"
+         offset="0"
          id="stop2" />
     </linearGradient>
-    <radialGradient
+    <linearGradient
        inkscape:collect="always"
-       xlink:href="#linearGradient1"
-       id="radialGradient2"
-       cx="256.06488"
-       cy="256.03687"
-       fx="256.06488"
-       fy="256.03687"
-       r="256.02197"
-       gradientTransform="matrix(1,0,0,0.99992967,0,0.01800642)"
+       xlink:href="#linearGradient6"
+       id="linearGradient8"
+       x1="349.31079"
+       y1="656.19507"
+       x2="349.31079"
+       y2="-59.39698"
        gradientUnits="userSpaceOnUse" />
   </defs>
   <g
@@ -67,12 +74,12 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="stroke-width:4;stroke:#000000;fill:url(#radialGradient2);"
-       id="rect1"
-       width="502.04395"
-       height="502.00793"
-       x="5.0429091"
-       y="5.0328999"
+       style="fill:url(#linearGradient8);stroke:#000000;stroke-width:0;stroke-dasharray:none"
+       id="rect2"
+       width="830.14337"
+       height="715.59204"
+       x="-72.124893"
+       y="-59.396969"
        ry="40.567493" />
   </g>
 </svg>

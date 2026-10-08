@@ -27,6 +27,9 @@ FEventReply UFWOptionSelector::SelectionHoverOnMouseDown(FGeometry MyGeometry, c
 		{
 			GEngine->AddOnScreenDebugMessage(31232141, 10.0f, FColor::Emerald, FString::Printf(TEXT("%f\n"), Selected));
 		}
+		
+		CurrentOffsetStart = CurrentOffset;
+		CurrentOffsetTime = 0.0f;
 		InFocusIndex = Selected;
 	}
 	return FEventReply(true);
@@ -34,7 +37,9 @@ FEventReply UFWOptionSelector::SelectionHoverOnMouseDown(FGeometry MyGeometry, c
 
 FEventReply UFWOptionSelector::LeftBorderOnMouseDown(FGeometry MyGeometry, const FPointerEvent& MouseEvent)
 {
-	InFocusIndex = FMath::Clamp(InFocusIndex - 1, 0, OptionSelector->GetNumItems() - 2);
+	CurrentOffsetStart = CurrentOffset;
+	CurrentOffsetTime = 0.0f;
+	InFocusIndex = FMath::Clamp(InFocusIndex - 1, 0, OptionSelector->GetNumItems() - 3);
 	SelectionChanged(Cast<UFWMenuObject>(OptionSelector.Get()->GetItemAt(InFocusIndex)));
 	return FEventReply(true);	
 }
@@ -42,7 +47,9 @@ FEventReply UFWOptionSelector::LeftBorderOnMouseDown(FGeometry MyGeometry, const
 
 FEventReply UFWOptionSelector::RightBorderOnMouseDown(FGeometry MyGeometry, const FPointerEvent& MouseEvent)
 {
-	InFocusIndex = FMath::Clamp(InFocusIndex + 1, 0, OptionSelector->GetNumItems() - 2);
+	CurrentOffsetStart = CurrentOffset;
+	CurrentOffsetTime = 0.0f;
+	InFocusIndex = FMath::Clamp(InFocusIndex + 1, 0, OptionSelector->GetNumItems() - 3);
 	SelectionChanged(Cast<UFWMenuObject>(OptionSelector.Get()->GetItemAt(InFocusIndex)));
 	return FEventReply(true);
 }
@@ -249,24 +256,26 @@ void UFWOptionSelector::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 		GEngine->AddOnScreenDebugMessage(412414, 10.0f, FColor::Purple, FString::Printf(TEXT("%f\n"), SizeBox->GetWidthOverride()));
 	}
 	
-	float OffsetToFocus = InFocusIndex - CurrentOffset;
-	if (OffsetToFocus != 0.0f)
+	if (InFocusIndex - CurrentOffsetStart != 0.0f)
 	{
 		CurrentOffsetTime += InDeltaTime;
 	} else
 	{
+		CurrentOffset = CurrentOffsetStart;
 		CurrentOffsetTime = 0;
 	}
-	if (CurrentOffset > 1.0f)
+	if (CurrentOffsetTime > 1.0f)
 	{
-		CurrentOffset = InFocusIndex;
+		CurrentOffsetStart = InFocusIndex;
+		CurrentOffsetTime = 0.0f;
 	} else
 	{
+		CurrentOffset = FMath::InterpExpoOut(CurrentOffsetStart, static_cast<float>(InFocusIndex),CurrentOffsetTime);
 		if (MaterialInstance)
 		{
-			MaterialInstance->SetScalarParameterValue(TEXT("InFocusX"), FMath::InterpExpoOut(CurrentOffset, static_cast<float>(OffsetToFocus),CurrentOffsetTime));
+			MaterialInstance->SetScalarParameterValue(TEXT("InFocusX"), CurrentOffset);
 		}
-		OptionSelector->SetScrollOffset(FMath::InterpExpoOut(CurrentOffset, static_cast<float>(OffsetToFocus),CurrentOffsetTime));
+		OptionSelector->SetScrollOffset(CurrentOffset);
 	}
 	
 }
