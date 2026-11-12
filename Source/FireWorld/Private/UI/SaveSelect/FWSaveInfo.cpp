@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/SaveSelect/SaveInfo.h"
+#include "UI/SaveSelect/FWSaveInfo.h"
 
 #include "FWGameInstance.h"
 #include "Components/Button.h"
@@ -9,7 +9,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Save/FWSaveGame.h"
 
-void USaveInfo::NativeConstruct()
+UFWSaveInfo::UFWSaveInfo()
+{
+}
+
+void UFWSaveInfo::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -19,16 +23,16 @@ void USaveInfo::NativeConstruct()
 	}
 	if (MainButton)
 	{
-		MainButton.Get()->OnClicked.AddDynamic(this, &USaveInfo::MainButtonClicked);
+		MainButton.Get()->OnClicked.AddDynamic(this, &UFWSaveInfo::MainButtonClicked);
 	}
 	if (DeleteSaveButton)
 	{
-		DeleteSaveButton.Get()->OnClicked.AddDynamic(this, &USaveInfo::DeleteSaveButtonClicked);
+		DeleteSaveButton.Get()->OnClicked.AddDynamic(this, &UFWSaveInfo::DeleteSaveButtonClicked);
 	}
 	LoadSaveInfo(FString());
 }
 
-void USaveInfo::LoadSaveInfo(FString SaveToLoad)
+void UFWSaveInfo::LoadSaveInfo(FString SaveToLoad)
 {
 	if (!FWGameInstance)
 	{
@@ -45,7 +49,7 @@ void USaveInfo::LoadSaveInfo(FString SaveToLoad)
 	}
 }
 
-void USaveInfo::MainButtonClicked()
+void UFWSaveInfo::MainButtonClicked()
 {
 	if (FWGameInstance && !FWSaveName.IsEmpty() && FWSaveGame)
 	{
@@ -57,7 +61,7 @@ void USaveInfo::MainButtonClicked()
 	}
 }
 
-void USaveInfo::DeleteSaveButtonClicked()
+void UFWSaveInfo::DeleteSaveButtonClicked()
 {
 	if (FWGameInstance && !FWSaveName.IsEmpty())
 	{

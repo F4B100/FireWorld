@@ -39,7 +39,7 @@ public:
 
 
 	//=========================Components=========================
-	UPROPERTY(EditDefaultsOnly, Category=Movement)
+	UPROPERTY(EditDefaultsOnly, Category=Movement, SaveGame)
 	TObjectPtr<UFWCharacterMovementComponent> FWMovementComponent = nullptr;
 	UFUNCTION(BlueprintCallable)
 	UFWCharacterMovementComponent *GetFWMovementComponent() {return FWMovementComponent;}
@@ -83,10 +83,15 @@ public:
 	
 	void SprintPressed() const;
 	void SprintReleased() const;
-	UFUNCTION(BlueprintCallable, Category = "Actions")
+	UFUNCTION(BlueprintCallable, Category = "FW|Actions")
 	void Fire();
-	UFUNCTION(BlueprintCallable, Category = "Actions")
+	UFUNCTION(BlueprintCallable, Category = "FW|Actions")
 	void StopFire();
+	
+	UFUNCTION(BlueprintCallable, Category = "FW|Save")
+	void SaveCharacterData();
+	UFUNCTION(BlueprintCallable, Category = "FW|Save")
+	void LoadCharacterData();
 
 	virtual void AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce = false) override;
 

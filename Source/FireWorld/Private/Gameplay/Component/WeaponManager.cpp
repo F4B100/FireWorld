@@ -33,6 +33,11 @@ void UWeaponManager::EndFire()
 	}
 }
 
+void UWeaponManager::HandleInventoryLoaded()
+{
+	
+}
+
 void UWeaponManager::BeginPlay()
 {
 	Super::BeginPlay();
@@ -48,6 +53,10 @@ void UWeaponManager::BeginPlay()
 	}
 	if (ItemManager)
 	{
+		ItemManager->OnInventoryLoaded.AddUObject(
+			this,
+			&UWeaponManager::HandleInventoryLoaded
+		);
 		ItemManager->OnItemRemoved.AddUObject(
 			this,
 			&UWeaponManager::HandleItemRemoved
@@ -107,7 +116,12 @@ void UWeaponManager::ChangeEquippedWeapon(int32 Index, UWeapon *Weapon)
 	{
 		CurrentWeapon = Weapon;
 		CurrentWeaponIndex = Index;
-			CurrentWeapon.Get()->SwitchedInto(Owner);
+		CurrentWeapon.Get()->SwitchedInto(Owner);
+		OnWeaponChanged.Broadcast(CurrentWeapon);
+		return;
+	}
+	if (!ItemManager)
+	{
 		return;
 	}
 	TArray<UFWItem*> Items = ItemManager->GetAllItems();
@@ -123,8 +137,19 @@ void UWeaponManager::ChangeEquippedWeapon(int32 Index, UWeapon *Weapon)
 			CurrentWeaponIndex = Index;
 			CurrentWeapon = WeaponCast;
 			CurrentWeapon.Get()->SwitchedInto(Owner);
+			OnWeaponChanged.Broadcast(CurrentWeapon);
 		}
 	}
+}
+
+void UWeaponManager::LoadWeapons(FWeaponManagerSavedData& SaveData)
+{
+	ChangeEquippedWeapon(SaveData.CurrentWeaponIndex);
+}
+
+void UWeaponManager::SaveWeapons(FWeaponManagerSavedData& SaveData)
+{
+	SaveData.CurrentWeaponIndex = CurrentWeaponIndex;
 }
 
 void UWeaponManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

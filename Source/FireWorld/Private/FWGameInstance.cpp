@@ -41,6 +41,13 @@ void UFWGameInstance::Init()
 			It.RemoveCurrent();
 		}
 	}
+	if (SaveNames)
+	{
+		if (!SaveNames->LastSaveLoaded.IsEmpty())
+		{
+			ChangeLoadedSaveGame(SaveNames->LastSaveLoaded);
+		}
+	}
 }
 
 void UFWGameInstance::SaveGame()
@@ -100,15 +107,23 @@ bool UFWGameInstance::ChangeLoadedSaveGame(const FString SaveName, UFWSaveGame* 
 {
 	if (SaveGame)
 	{
+		SaveNames->LastSaveLoaded = SaveName;
+		SaveSaveNames();
+		
 		CurrentLoadedSave = SaveGame;
 		LoadedSaveName = SaveName;
 		return true;
 	}
+	
 	if (!SaveNames.Get()->SaveNames.Contains(SaveName))
 		return false;
 	if (CurrentLoadedSave != nullptr)
 		UGameplayStatics::SaveGameToSlot(CurrentLoadedSave, LoadedSaveName, 0);
+	
 	LoadedSaveName = SaveName;
+	SaveSaveNames();
+	
+	SaveNames->LastSaveLoaded = LoadedSaveName;
 	if (UGameplayStatics::DoesSaveGameExist(SaveName, 0))
 	{
 		CurrentLoadedSave = Cast<UFWSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveName, 0));

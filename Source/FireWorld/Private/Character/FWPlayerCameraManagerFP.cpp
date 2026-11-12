@@ -17,6 +17,10 @@ void AFWPlayerCameraManagerFP::UpdateViewTarget(FTViewTarget& OutVT, float Delta
 	if (AFWCharacter *CharacterFP = Cast<AFWCharacter>(GetOwningPlayerController()->GetCharacter()))
 	{
 		UFWCharacterMovementComponent *MovementComponent = CharacterFP->GetFWMovementComponent();
+		if (!MovementComponent)
+		{
+			return;
+		}
 		FVector TargetCrouchOffset = FVector(
 			0.0f,
 			0.0f,

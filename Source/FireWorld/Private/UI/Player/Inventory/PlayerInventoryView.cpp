@@ -7,6 +7,20 @@
 #include "Gameplay/Component/ItemManagerComponent.h"
 #include "UI/Player/Inventory/InventoryItemView.h"
 
+void UPlayerInventoryView::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	if (IsDesignTime())
+	{
+		for (int i = 0; i < DesignTimeItems; ++i)
+		{
+			UWidget* TestChildren = CreateWidget<UInventoryItemView>(this, ItemViewClass);
+			ItemContainer->AddChildToVerticalBox(TestChildren);
+		}
+	}
+}
+
 void UPlayerInventoryView::NativeConstruct()
 {
 	Super::NativeConstruct();

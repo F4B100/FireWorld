@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CommonListView.h"
 #include "CommonUserWidget.h"
 #include "FWMenuEntry.h"
 #include "FWOptionSelector.generated.h"
@@ -45,6 +46,8 @@ class FWUI_API UFWOptionSelector : public UCommonUserWidget
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UCommonBorder> LeftBorder = nullptr;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess))
+	TObjectPtr<UCommonBorder> MiddleBorder = nullptr;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UCommonBorder> RightBorder = nullptr;
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<UMaterialInstanceDynamic> MaterialInstance = nullptr;
@@ -60,13 +63,22 @@ class FWUI_API UFWOptionSelector : public UCommonUserWidget
 	int32 InFocusIndex = 0;
 	UPROPERTY()
 	float CurrentSize = 0.0f;
+	UPROPERTY()
+	double SelectionAnimationStartTime = 0.0;
+	UPROPERTY()
+	float SelectionAnimationDuration = 1.0f;
+	
+	UPROPERTY()
+	TObjectPtr<UFWMenuObject> SelectedMenuObject = nullptr;
 	
 	UFWOptionSelector();
 	
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(
 		FOnSelectionChanged,
-		UFWMenuObject *,
-		Selection
+		const UFWMenuObject *,
+		Selection,
+		const UFWOptionSelector *,
+		Selector
 	);
 	
 	// Event Handlers
@@ -94,18 +106,22 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "FW")
 	TArray<FFWEntryCreateInfo> InitialOptions = TArray<FFWEntryCreateInfo>();
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "FW")
+	bool bIsFocusedOptionInteractible = false;
+	
 	
 	UFUNCTION(BlueprintCallable)
 	void AddOption(FFWEntryCreateInfo CreateInfo);
 	UFUNCTION(BlueprintCallable)
 	void AddOptions(TArray<FFWEntryCreateInfo> CreateInfoArr);
 	UFUNCTION(BlueprintCallable)
-	void SetSelected(FString Name);
+	void SetSelected(FString Name, bool Animate);
+	
+	UFUNCTION(BlueprintCallable, NotBlueprintable)
+	UFWMenuObject* GetSelected();
 	
 	UFUNCTION()
 	void SelectionChanged(UFWMenuObject* SelectionInFocus) const;
-	UFUNCTION()
-	void UpdateSelectionViewSize();
 
 protected:
 	virtual void NativePreConstruct() override;

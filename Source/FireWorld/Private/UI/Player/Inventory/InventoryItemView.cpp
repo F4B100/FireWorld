@@ -25,6 +25,6 @@ void UInventoryItemView::SetItem(const TObjectPtr<UFWItem> NewItem)
 	}
 	if (ItemName)
 	{
-		ItemName.Get()->SetText(FText::FromString(Item.Get()->GetName()));
+		ItemName.Get()->SetText(FText::FromString(Item.Get()->GetItemName().ToString()));
 	}
 }

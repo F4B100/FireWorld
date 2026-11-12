@@ -30,9 +30,16 @@ class FIREWORLD_API UWeaponManager : public UActorComponent
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<UFWGameInstance> FWGameInstance = nullptr;
+	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponChanged, UWeapon *, NewWeapon);
 
 public:
 	UWeaponManager();
+	
+	FOnWeaponChanged OnWeaponChanged;
+	
+	UFUNCTION(BlueprintCallable)
+	UWeapon *GetCurrentWeapon() {return CurrentWeapon;};
 
 	void StartFire();
 	void EndFire();
@@ -42,6 +49,11 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 							   FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable)
+	void LoadWeapons(FWeaponManagerSavedData &SaveData);
+	UFUNCTION(BlueprintCallable)
+	void SaveWeapons(FWeaponManagerSavedData& SaveData);
+	
 	virtual void Serialize(FArchive& Ar) override;
 protected:
 	void HandleItemRemoved(UFWItem* Item, int32 Index);
@@ -49,4 +61,7 @@ protected:
 	void HandleItemChanged(int32 Old, int32 New);
 
 	void ChangeEquippedWeapon(int32 Index, UWeapon *Weapon = nullptr);
+	
+	UFUNCTION()
+	void HandleInventoryLoaded();
 };

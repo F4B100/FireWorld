@@ -27,6 +27,6 @@ public:
 	float ViewBoobingInterpolateTime = 0.0f;
 
 	AFWPlayerCameraManagerFP();
-	
+protected:
 	virtual void UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime) override;
 };

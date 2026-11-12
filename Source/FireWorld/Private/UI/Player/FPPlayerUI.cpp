@@ -4,8 +4,19 @@
 #include "UI/Player/FPPlayerUI.h"
 
 #include "Character/FWCharacter.h"
-#include "Components/WidgetSwitcher.h"
+#include "Gameplay/Component/WeaponManager.h"
+#include "UI/Player/Inventory/InventoryItemView.h"
 #include "UI/Player/Inventory/PlayerInventoryView.h"
+#include "Gameplay/Items/FWItem.h"
+#include "Gameplay/Items/Weapon.h"
+
+void UFPPlayerUI::OnWeaponChangedHandler(UWeapon *Weapon) const
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon.Get()->SetItem(Cast<UFWItem>(WeaponManager.Get()->GetCurrentWeapon()));
+	}
+}
 
 void UFPPlayerUI::NativeConstruct()
 {
@@ -13,30 +24,42 @@ void UFPPlayerUI::NativeConstruct()
 
 	FWCharacter = GetOwningPlayerPawn<AFWCharacter>();
 
-	if (InputMappingComponent)
+	if (FWCharacter)
 	{
-
+		WeaponManager = FWCharacter.Get()->GetWeaponManager();
 	}
+	if (CurrentWeapon)
+	{
+		WeaponManager->OnWeaponChanged.AddUniqueDynamic(this, &UFPPlayerUI::OnWeaponChangedHandler);
+		CurrentWeapon.Get()->SetItem(Cast<UFWItem>(WeaponManager.Get()->GetCurrentWeapon()));
+	}
+	
+	
 }
 
 void UFPPlayerUI::ToggleInventory()
 {
-	if (InventorySwitcher && InventoryWidget && DefaultWidget)
+	if (InventoryWidget && DefaultWidget)
 	{
-		if (InventorySwitcher.Get()->GetActiveWidget() == DefaultWidget)
+		if (!bIsInInventory)
 		{
-			InventoryFocusSwitched(true);
-		}
-		else
+			bIsInInventory = true;
+			DefaultWidget.Get()->SetIsEnabled(false);
+			InventoryWidget.Get()->SetIsEnabled(true);
+			PlayAnimationForward(ToggleInventoryAnimation);
+		} else
 		{
-			InventoryFocusSwitched(false);
+			bIsInInventory = false;
+			DefaultWidget.Get()->SetIsEnabled(true);
+			InventoryWidget.Get()->SetIsEnabled(false);
+			PlayAnimationReverse(ToggleInventoryAnimation);
 		}
 	}
 }
 
 bool UFPPlayerUI::IsInInventory()
 {
-	return InventorySwitcher.Get()->GetActiveWidget() == InventoryWidget;
+	return bIsInInventory;
 }
 
 void UFPPlayerUI::InventoryFocusSwitched_Implementation(bool InFocus)
@@ -50,6 +73,5 @@ void UFPPlayerUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	if (FWCharacter)
 	{
 		TObjectPtr<UPlayerStatsComponent> Stats = FWCharacter.Get()->GetPlayerStats();
-
 	}
 }

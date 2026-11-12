@@ -6,6 +6,11 @@
 #include "CommonUserWidget.h"
 #include "FPPlayerUI.generated.h"
 
+class UWeapon;
+class UWeaponManager;
+class AFWPlayerState;
+class UItemManagerComponent;
+class UInventoryItemView;
 class UEnhancedInputComponent;
 class UPlayerInventoryView;
 class UWidgetSwitcher;
@@ -19,19 +24,34 @@ class FIREWORLD_API UFPPlayerUI : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
-
-public:
+	bool bIsInInventory = false;
+	
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<AFWCharacter> FWCharacter = nullptr;
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UPROPERTY()
+	TObjectPtr<UWeaponManager> WeaponManager = nullptr;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UFWPlayerInteractionWidget> InteractionWidget = nullptr;
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	TObjectPtr<UWidgetSwitcher> InventorySwitcher = nullptr;
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UWidget> InventoryWidget = nullptr;
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UWidget> DefaultWidget = nullptr;
+	
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess))
+	TObjectPtr<UInventoryItemView> CurrentWeapon = nullptr;
+	
+protected:
+	UFUNCTION()
+	void OnWeaponChangedHandler(UWeapon* Weapon) const;
+	virtual void NativeConstruct() override;
 
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;	
+	
+public:
+	
+	UPROPERTY(Transient, meta=(BindWidgetAnim))
+	TObjectPtr<UWidgetAnimation> ToggleInventoryAnimation = nullptr;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
 	TObjectPtr<UInputAction> OpenMenuAction = nullptr;
 
@@ -40,8 +60,6 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category="Input")
 	TObjectPtr<UEnhancedInputComponent> EnhancedInputComponent = nullptr;
-
-	void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable)
 	UFWPlayerInteractionWidget *GetInteractionWidget() {return InteractionWidget;}
@@ -53,7 +71,5 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void InventoryFocusSwitched(bool InFocus);
-
-	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 };
 

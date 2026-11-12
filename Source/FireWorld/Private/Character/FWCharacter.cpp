@@ -68,27 +68,23 @@ void AFWCharacter::BeginPlay()
 		{
 			FMemoryReader PlayerReader = FMemoryReader(FWGameInstance->CurrentLoadedSave->PlayerData);
 			FObjectAndNameAsStringProxyArchive Ar (PlayerReader, true);
+			Ar.SetIsSaving(false);
+			Ar.SetIsLoading(true);
 			Ar.ArIsSaveGame = true;
 			Serialize(Ar);
 		}
+		if (WeaponManager)
+		{
+			WeaponManager->LoadWeapons(FWGameInstance.Get()->CurrentLoadedSave->WeaponManagerData);
+		}
 	}
-
 }
 
 void AFWCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	if (FWGameInstance && FWGameInstance.Get()->CurrentLoadedSave)
-	{
-		ItemManager->SaveInventory(FWGameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory);
-		FMemoryWriter PlayerReader = FMemoryWriter(FWGameInstance->CurrentLoadedSave->PlayerData);
-		FObjectAndNameAsStringProxyArchive Ar = FObjectAndNameAsStringProxyArchive(PlayerReader, true);
-		Ar.SetIsSaving(true);
-		Ar.SetIsLoading(false);
-		Serialize(Ar);
-		FWGameInstance.Get()->SaveGame();
-	}
+	SaveCharacterData();
 }
 
 void AFWCharacter::BeginDestroy()
@@ -146,11 +142,6 @@ void AFWCharacter::Interact()
 void AFWCharacter::Serialize(FArchive& Ar)
 {
 	Super::Serialize(Ar);
-
-	if (Ar.IsSaveGame())
-	{
-		PlayerStats->Serialize(Ar);
-	}
 }
 
 void AFWCharacter::LaunchCharacterServer_Implementation(FVector LaunchVelocity, bool bXYOverride, bool bZOverride)
@@ -172,20 +163,64 @@ void AFWCharacter::AddMovementInput(const FVector2D& Move)
 
 void AFWCharacter::SprintPressed() const
 {
-	FWMovementComponent->SprintPressed();
+	if (FWMovementComponent)
+	{
+		FWMovementComponent->SprintPressed();
+	}
 }
 
 void AFWCharacter::SprintReleased() const
 {
-	FWMovementComponent->SprintReleassed();
+	if (FWMovementComponent)
+	{
+		FWMovementComponent->SprintReleassed();
+	}
 }
 
 void AFWCharacter::Fire()
 {
-	WeaponManager.Get()->StartFire();
+	if (WeaponManager)
+	{
+		WeaponManager.Get()->StartFire();
+	}
 }
 
 void AFWCharacter::StopFire()
 {
-	WeaponManager.Get()->EndFire();
+	if (WeaponManager)
+	{
+		WeaponManager.Get()->EndFire();
+	}
+}
+
+void AFWCharacter::SaveCharacterData()
+{
+	if (FWGameInstance && FWGameInstance.Get()->CurrentLoadedSave)
+	{
+		ItemManager->SaveInventory(FWGameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory);
+		WeaponManager->SaveWeapons(FWGameInstance.Get()->CurrentLoadedSave.Get()->WeaponManagerData);
+		FMemoryWriter PlayerReader = FMemoryWriter(FWGameInstance->CurrentLoadedSave->PlayerData);
+		FObjectAndNameAsStringProxyArchive Ar = FObjectAndNameAsStringProxyArchive(PlayerReader, true);
+		Ar.SetIsSaving(true);
+		Ar.SetIsLoading(false);
+		Ar.ArIsSaveGame = true;
+		Serialize(Ar);
+		FWGameInstance.Get()->SaveGame();
+	}
+}
+
+void AFWCharacter::LoadCharacterData()
+{
+	if (FWGameInstance && FWGameInstance.Get()->CurrentLoadedSave)
+	{
+		ItemManager->SaveInventory(FWGameInstance.Get()->CurrentLoadedSave.Get()->SavedInventory);
+		WeaponManager->SaveWeapons(FWGameInstance.Get()->CurrentLoadedSave.Get()->WeaponManagerData);
+		FMemoryWriter PlayerReader = FMemoryWriter(FWGameInstance->CurrentLoadedSave->PlayerData);
+		FObjectAndNameAsStringProxyArchive Ar = FObjectAndNameAsStringProxyArchive(PlayerReader, true);
+		Ar.SetIsSaving(true);
+		Ar.SetIsLoading(false);
+		Ar.ArIsSaveGame = true;
+		Serialize(Ar);
+		FWGameInstance.Get()->SaveGame();
+	}
 }

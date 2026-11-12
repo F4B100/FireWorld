@@ -18,6 +18,9 @@ UCLASS(Blueprintable)
 class FIREWORLD_API AFWController : public APlayerController
 {
 	GENERATED_BODY()
+	
+	UPROPERTY()
+	FTimerHandle SaveGameTimerHandle;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Input")
@@ -62,6 +65,8 @@ public:
 	AFWController();
 
 
+	UFUNCTION()
+	void SaveCharacterData();
 	virtual void Tick(float DeltaTime) override;
 	virtual void AcknowledgePossession(APawn* P) override;
 

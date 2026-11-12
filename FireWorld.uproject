@@ -57,6 +57,18 @@
 		{
 			"Name": "DynamicMaterial",
 			"Enabled": true
+		},
+		{
+			"Name": "WaterAdvanced",
+			"Enabled": true
+		},
+		{
+			"Name": "WaterExtras",
+			"Enabled": true
+		},
+		{
+			"Name": "PCGWaterInterop",
+			"Enabled": true
 		}
 	]
 }

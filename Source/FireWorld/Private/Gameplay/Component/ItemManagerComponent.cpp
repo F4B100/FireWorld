@@ -69,4 +69,5 @@ void UItemManagerComponent::LoadInventory(FSavedInventory& Inventory)
 		NewItem->Serialize(Reader);
 		Items.Add(NewItem);
 	}
+	OnInventoryLoaded.Broadcast();
 }

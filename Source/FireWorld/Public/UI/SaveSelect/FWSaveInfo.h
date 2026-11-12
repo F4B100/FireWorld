@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "SaveInfo.generated.h"
+#include "FWSaveInfo.generated.h"
 
 class UTextBlock;
 class UFWSaveGame;
@@ -14,9 +14,11 @@ class UButton;
  * 
  */
 UCLASS()
-class FIREWORLD_API USaveInfo : public UCommonUserWidget
+class FIREWORLD_API UFWSaveInfo : public UCommonUserWidget
 {
 	GENERATED_BODY()
+	
+	UFWSaveInfo();
 
 public:
 	UPROPERTY(BlueprintReadOnly)

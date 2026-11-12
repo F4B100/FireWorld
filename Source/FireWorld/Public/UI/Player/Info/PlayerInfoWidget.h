@@ -23,7 +23,7 @@ class FIREWORLD_API UPlayerInfoWidget : public UCommonUserWidget
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess))
 	TObjectPtr<AFWCharacter> FWCharacter = nullptr;
 
-public:
+protected:
 	void NativeConstruct() override;
 	void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 };

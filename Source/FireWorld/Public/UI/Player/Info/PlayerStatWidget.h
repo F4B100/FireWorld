@@ -11,7 +11,7 @@ class UTextBlock;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class FIREWORLD_API UPlayerStatWidget : public UCommonUserWidget
 {
 	GENERATED_BODY()
@@ -24,12 +24,13 @@ class FIREWORLD_API UPlayerStatWidget : public UCommonUserWidget
 	TObjectPtr<UProgressBar> StatBar = nullptr;
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stat")
 	FText StatName = FText();
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stat")
 	FLinearColor StatColor = FColor::Black;
 
-	void NativePreConstruct() override;
-
 	void UpdateStatValue(float CurrentVal, float Max);
+
+protected:
+	void NativePreConstruct() override;
 };

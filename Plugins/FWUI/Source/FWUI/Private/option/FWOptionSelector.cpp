@@ -30,8 +30,13 @@ FEventReply UFWOptionSelector::SelectionHoverOnMouseDown(FGeometry MyGeometry, c
 		
 		CurrentOffsetStart = CurrentOffset;
 		CurrentOffsetTime = 0.0f;
+		SelectionAnimationStartTime = FPlatformTime::Seconds();
 		InFocusIndex = Selected;
 	}
+	
+	SelectedMenuObject = Cast<UFWMenuObject>(OptionSelector->GetItemAt(InFocusIndex + 1));
+	SelectionChanged(SelectedMenuObject);
+	
 	return FEventReply(true);
 }
 
@@ -39,8 +44,12 @@ FEventReply UFWOptionSelector::LeftBorderOnMouseDown(FGeometry MyGeometry, const
 {
 	CurrentOffsetStart = CurrentOffset;
 	CurrentOffsetTime = 0.0f;
+	SelectionAnimationStartTime = FPlatformTime::Seconds();
 	InFocusIndex = FMath::Clamp(InFocusIndex - 1, 0, OptionSelector->GetNumItems() - 3);
-	SelectionChanged(Cast<UFWMenuObject>(OptionSelector.Get()->GetItemAt(InFocusIndex)));
+	
+	SelectedMenuObject = Cast<UFWMenuObject>(OptionSelector->GetItemAt(InFocusIndex + 1));
+	
+	SelectionChanged(SelectedMenuObject);
 	return FEventReply(true);	
 }
 
@@ -49,8 +58,12 @@ FEventReply UFWOptionSelector::RightBorderOnMouseDown(FGeometry MyGeometry, cons
 {
 	CurrentOffsetStart = CurrentOffset;
 	CurrentOffsetTime = 0.0f;
+	SelectionAnimationStartTime = FPlatformTime::Seconds();
 	InFocusIndex = FMath::Clamp(InFocusIndex + 1, 0, OptionSelector->GetNumItems() - 3);
-	SelectionChanged(Cast<UFWMenuObject>(OptionSelector.Get()->GetItemAt(InFocusIndex)));
+	
+	SelectedMenuObject = Cast<UFWMenuObject>(OptionSelector->GetItemAt(InFocusIndex + 1));
+	
+	SelectionChanged(SelectedMenuObject);
 	return FEventReply(true);
 }
 
@@ -62,6 +75,7 @@ void UFWOptionSelector::CreateAndAddOptionWidget(FString Content, UObject *UserC
 		return;
 	}
 	const int32 NumItems = OptionSelector->GetNumItems();
+	UFWMenuObject *EntryData = nullptr;
 	if (AtCustomIndex)
 	{
 		if (Index >= NumItems || Index < 0)
@@ -69,13 +83,18 @@ void UFWOptionSelector::CreateAndAddOptionWidget(FString Content, UObject *UserC
 			UE_LOG(LogTemp, Warning, TEXT("Custom index out of bounds when trying to add Entry to UFWOptionSelector: %s"), *this->GetName())
 			return;
 		}
-		UFWMenuObject *EntryData = NewObject<UFWMenuObject>(this, UFWMenuObject::StaticClass());
+		EntryData = NewObject<UFWMenuObject>(this, UFWMenuObject::StaticClass());
 		EntryData->SetEntryData({.Index = Index, .Content = FString(), .UserData = nullptr, .bIsSpacer = false});
 		OptionSelector->AddItemAt(EntryData, Index);
 	} else {
-		UFWMenuObject *EntryData = NewObject<UFWMenuObject>(this, UFWMenuObject::StaticClass());
+		EntryData = NewObject<UFWMenuObject>(this, UFWMenuObject::StaticClass());
 		EntryData->SetEntryData({.Index = NumItems - 1, .Content = Content, .UserData = UserContent, .bIsSpacer = false});
 		OptionSelector->AddItemAt(EntryData, NumItems - 1);
+	}
+
+	if (!SelectedMenuObject && EntryData)
+	{
+		SelectedMenuObject = EntryData;
 	}
 	
 	if (MaterialInstance)
@@ -120,28 +139,44 @@ void UFWOptionSelector::AddOptions(TArray<FFWEntryCreateInfo> CreateInfoArr)
 	}
 }
 
-void UFWOptionSelector::SetSelected(FString Name)
+void UFWOptionSelector::SetSelected(FString Name, bool Animate)
 {
+	if (Name.IsEmpty())
+	{
+		return;
+	}
+	int i = 0;
 	for (auto Element : OptionSelector->GetListItems())
 	{
 		UFWMenuObject *Data = Cast<UFWMenuObject>(Element);
 		if (Data->GetEntryData().Content.Equals(Name))
 		{
-			OptionSelector->SetSelectedItem(Data);
+			InFocusIndex = i - 1;
+			SelectedMenuObject = Data;
+			if (!Animate)
+			{
+				CurrentOffset = InFocusIndex;
+				
+				if (MaterialInstance)
+				{
+					MaterialInstance->SetScalarParameterValue(TEXT("InFocusX"), CurrentOffset);
+				}
+				OptionSelector->SetScrollOffset(CurrentOffset);
+			}
 		}
+		i++;
 	}
+}
+
+UFWMenuObject* UFWOptionSelector::GetSelected()
+{
+	return SelectedMenuObject;
 }
 
 void UFWOptionSelector::SelectionChanged(UFWMenuObject* SelectionInFocus) const
 {
-	OnSelectionChanged.Broadcast(SelectionInFocus);
+	OnSelectionChanged.Broadcast(SelectionInFocus, this);
 }
-
-void UFWOptionSelector::UpdateSelectionViewSize()
-{
-	
-}
-
 
 void UFWOptionSelector::NativePreConstruct()
 {
@@ -169,6 +204,23 @@ void UFWOptionSelector::NativePreConstruct()
 		{
 			SizeBox->SetHeightOverride(OptionMaxSize);
 			SizeBox->SetWidthOverride(OptionMaxSize * (OptionSelector->GetNumItems() - 2));
+		}
+		if (UWorld* World = GetWorld())
+		{
+			if (UUserWidget* RootWidget = Cast<UUserWidget>(GetTypedOuter<UUserWidget>()))
+			{
+				RootWidget->ForceLayoutPrepass();
+			}
+		}
+
+		const FVector2D DesiredSize = GetDesiredSize();
+		for (auto Element : OptionSelector->GetListItems())
+		{
+			TObjectPtr<UFWMenuObject> MenuObject = Cast<UFWMenuObject>(Element);
+			if (MenuObject)
+			{
+				MenuObject->SetSize(CurrentSize / 3.0f);
+			}
 		}
 	}
 }
@@ -213,7 +265,7 @@ void UFWOptionSelector::NativeConstruct()
 	
 	if (MaterialInstance)
 	{
-		MaterialInstance->SetScalarParameterValue(TEXT("NumberOfOptionsX"), OptionSelector->GetNumItems());
+		MaterialInstance->SetScalarParameterValue(TEXT("NumberOfOptionsX"), OptionSelector->GetNumItems() - 2);
 		MaterialInstance->SetScalarParameterValue(TEXT("NumberOfOptionsY"), 1.0);
 	}
 
@@ -226,10 +278,35 @@ void UFWOptionSelector::NativeConstruct()
 	{
 		LeftBorder->OnMouseButtonDownEvent.BindDynamic(this, &UFWOptionSelector::LeftBorderOnMouseDown);
 	}
+
+	if (MiddleBorder)
+	{
+		if (bIsFocusedOptionInteractible)
+		{
+			MiddleBorder.Get()->SetVisibility(ESlateVisibility::Hidden);	
+		}
+	}
 	
 	if (RightBorder)
 	{
 		RightBorder->OnMouseButtonDownEvent.BindDynamic(this, &UFWOptionSelector::RightBorderOnMouseDown);
+	}
+	if (UWorld* World = GetWorld())
+	{
+		if (UUserWidget* RootWidget = Cast<UUserWidget>(GetTypedOuter<UUserWidget>()))
+		{
+			RootWidget->ForceLayoutPrepass();
+		}
+	}
+
+	const FVector2D DesiredSize = GetDesiredSize();
+	for (auto Element : OptionSelector->GetListItems())
+	{
+		TObjectPtr<UFWMenuObject> MenuObject = Cast<UFWMenuObject>(Element);
+		if (MenuObject)
+		{
+			MenuObject->SetSize(CurrentSize / 3.0f);
+		}
 	}
 }
 
@@ -256,26 +333,28 @@ void UFWOptionSelector::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 		GEngine->AddOnScreenDebugMessage(412414, 10.0f, FColor::Purple, FString::Printf(TEXT("%f\n"), SizeBox->GetWidthOverride()));
 	}
 	
-	if (InFocusIndex - CurrentOffsetStart != 0.0f)
+	const double ElapsedTime = FPlatformTime::Seconds() - SelectionAnimationStartTime;
+	CurrentOffsetTime = FMath::Clamp(
+		static_cast<float>(ElapsedTime / SelectionAnimationDuration),
+		0.0f,
+		1.0f);
+	if (InFocusIndex - CurrentOffsetStart != 0.0f && CurrentOffsetTime < 1.0f)
 	{
-		CurrentOffsetTime += InDeltaTime;
-	} else
-	{
-		CurrentOffset = CurrentOffsetStart;
-		CurrentOffsetTime = 0;
+		CurrentOffset = FMath::InterpExpoOut(
+			CurrentOffsetStart,
+			static_cast<float>(InFocusIndex),
+			CurrentOffsetTime);
 	}
-	if (CurrentOffsetTime > 1.0f)
+	else
 	{
+		CurrentOffset = InFocusIndex;
 		CurrentOffsetStart = InFocusIndex;
-		CurrentOffsetTime = 0.0f;
-	} else
-	{
-		CurrentOffset = FMath::InterpExpoOut(CurrentOffsetStart, static_cast<float>(InFocusIndex),CurrentOffsetTime);
-		if (MaterialInstance)
-		{
-			MaterialInstance->SetScalarParameterValue(TEXT("InFocusX"), CurrentOffset);
-		}
-		OptionSelector->SetScrollOffset(CurrentOffset);
 	}
+
+	if (MaterialInstance)
+	{
+		MaterialInstance->SetScalarParameterValue(TEXT("InFocusX"), CurrentOffset);
+	}
+	OptionSelector->SetScrollOffset(CurrentOffset);
 	
 }

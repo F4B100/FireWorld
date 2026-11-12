@@ -11,12 +11,12 @@ void UPlayerStatWidget::NativePreConstruct()
 	Super::NativePreConstruct();
 
 	StatNameBlock.Get()->SetText(StatName);
-	StatValueBlock.Get()->SetText(FText::FromString("0.0"));
+	StatValueBlock.Get()->SetText(FText::FromString("0"));
 	StatBar.Get()->SetFillColorAndOpacity(StatColor);
 }
 
 void UPlayerStatWidget::UpdateStatValue(float CurrentVal, float Max)
 {
-	StatBar->SetPercent(CurrentVal / Max);
-	StatValueBlock.Get()->SetText(FText::FromString(FString::Printf(TEXT("%f"), CurrentVal)));
+	StatBar->SetPercent(CurrentVal / Max * 100.0f);
+	StatValueBlock.Get()->SetText(FText::FromString(FString::Printf(TEXT("%d"), static_cast<int>(CurrentVal / Max))));
 }

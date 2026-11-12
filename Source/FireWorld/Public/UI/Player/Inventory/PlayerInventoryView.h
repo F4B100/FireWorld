@@ -17,7 +17,7 @@ UCLASS(Blueprintable)
 class FIREWORLD_API UPlayerInventoryView : public UCommonUserWidget
 {
 	GENERATED_BODY()
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UVerticalBox> ItemContainer = nullptr;
 
 	UPROPERTY()
@@ -27,6 +27,10 @@ class FIREWORLD_API UPlayerInventoryView : public UCommonUserWidget
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess))
 	TSubclassOf<UInventoryItemView> ItemViewClass = nullptr;
-
+protected:
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
+public:
+	UPROPERTY(EditDefaultsOnly, Category="FW")
+	int DesignTimeItems;
 };

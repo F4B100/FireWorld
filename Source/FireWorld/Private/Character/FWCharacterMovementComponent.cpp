@@ -228,10 +228,6 @@ void UFWCharacterMovementComponent::CalcVelocity(float DeltaTime, float Friction
 		Velocity = Accelerate(Wishdir, MaxWalkSpeed, Ground_Accelerate, DeltaTime);
 		if (PendingLaunchVelocity != FVector::ZeroVector)
 		{
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("WishDir: %s"), *PendingLaunchVelocity.ToString()));
-			}
 			Velocity += PendingLaunchVelocity;
 		}
 		return;

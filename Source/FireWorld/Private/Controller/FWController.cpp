@@ -17,6 +17,14 @@ AFWController::AFWController()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void AFWController::SaveCharacterData()
+{
+	if (FWGameInstance.Get()->CurrentLoadedSave && FWCharacter && FWGameInstance.Get()->GetShouldSaveGame())
+	{
+		FWCharacter->SaveCharacterData();
+	}
+}
+
 void AFWController::BeginPlay()
 {
 	FWGameInstance = Cast<UFWGameInstance>(GetGameInstance());
@@ -25,6 +33,8 @@ void AFWController::BeginPlay()
 	SetInputMode(InputMode);
 
 	FWHUD = Cast<AFWCharacterHUD>(GetHUD());
+
+	GetWorld()->GetTimerManager().SetTimer(SaveGameTimerHandle, this, &AFWController::SaveCharacterData, 0.1, true, 0.0f);
 }
 
 void AFWController::OnPossess(APawn* APawn)
@@ -118,6 +128,7 @@ void AFWController::HandleMenuOpen(const FInputActionValue& InputActionValue)
 		FWHUD.Get()->MainWidget.Get()->ToggleInventory();
 		if (FWHUD.Get()->MainWidget.Get()->IsInInventory())
 		{
+			SetInputMode(FInputModeGameOnly());
 			const FInputModeUIOnly Input = FInputModeUIOnly();
 			SetShowMouseCursor(true);
 			SetInputMode(Input);
@@ -134,17 +145,6 @@ void AFWController::HandleMenuOpen(const FInputActionValue& InputActionValue)
 void AFWController::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (FWGameInstance.Get()->CurrentLoadedSave)
-	{
-		UFWSaveGame *SaveGame = FWGameInstance.Get()->CurrentLoadedSave;
-
-		SaveGame->PlayerData.Empty();
-		FMemoryWriter PlayerWriter = FMemoryWriter(SaveGame->PlayerData);
-		FObjectAndNameAsStringProxyArchive Ar(PlayerWriter, true);
-		Ar.ArIsSaveGame = true;
-		FWCharacter->Serialize(Ar);
-	}
 
 	if (FWGameInstance && FWGameInstance.Get()->GetShouldSaveGame())
 	{

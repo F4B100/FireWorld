@@ -5,13 +5,15 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include "Gameplay/Component/SavedInventory.h"
+#include "Gameplay/Component/WeaponManagerSave.h"
 #include "FWSaveGame.generated.h"
 
 USTRUCT(BlueprintType)
 struct FSerializedActorData
 {
 	GENERATED_BODY()
-
+	UPROPERTY()
+	TSubclassOf<AActor> ActorClass;
 	UPROPERTY()
 	TArray<uint8> Data;
 };
@@ -19,10 +21,10 @@ struct FSerializedActorData
 UENUM(BlueprintType)
 enum EGameDificulty
 {
-	GDIFICULTY_NONE UMETA(Hidden),
-	GDIFICULTY_EASY UMETA(DisplayName = "Easy"),
-	GDIFICULTY_NORMAL UMETA(DisplayName = "Normal"),
-	GDIFICULTY_HARD UMETA(DisplayName = "Hard")
+	G_DIFICULTY_NONE UMETA(Hidden),
+	G_DIFICULTY_EASY UMETA(DisplayName = "Easy"),
+	G_DIFICULTY_NORMAL UMETA(DisplayName = "Normal"),
+	G_DIFICULTY_HARD UMETA(DisplayName = "Hard")
 };
 
 /**
@@ -41,10 +43,16 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
 	FSavedInventory SavedInventory;
-
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
+	FWeaponManagerSavedData WeaponManagerData;
+	
 	UPROPERTY(BlueprintReadOnly, Category = "Locations")
 	TMap<FString, FSerializedActorData> SavedActorData;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Locations")
+	TMap<FString, FSerializedActorData> SpawnedActorData;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Player Save")
-	TEnumAsByte<EGameDificulty> Dificulty = GDIFICULTY_NORMAL;
+	TEnumAsByte<EGameDificulty> Dificulty = G_DIFICULTY_NORMAL;
 };

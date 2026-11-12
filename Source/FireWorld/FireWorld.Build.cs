@@ -15,7 +15,8 @@ public class FireWorld : ModuleRules
 			"InputCore",
 			"EnhancedInput",
 			"UMG",
-			"CommonUI"
+			"CommonUI",
+			"FWUI"
 		]);
 
 		PrivateDependencyModuleNames.AddRange([

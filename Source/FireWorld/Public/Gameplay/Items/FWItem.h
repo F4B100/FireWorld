@@ -17,7 +17,7 @@ class FIREWORLD_API UFWItem : public UObject
 {
 	GENERATED_BODY()
 
-	UPROPERTY(SaveGame)
+	UPROPERTY(EditDefaultsOnly, SaveGame)
 	FName ItemName = FName("No Name");
 	UPROPERTY(EditDefaultsOnly)
 	FSlateBrush ItemBrush;

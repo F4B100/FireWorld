@@ -121,15 +121,14 @@ public:
 
 	virtual bool IsMovingOnGround() const override;
 	virtual bool CanCrouchInCurrentState() const override;
+	virtual void CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration) override;
 
+	virtual void UpdateCharacterStateBeforeMovement(float DeltaSeconds) override;
 protected:
 	virtual void UpdateFromCompressedFlags(uint8 Flags) override;
 	virtual void OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity) override;
 
 	virtual void OnMovementModeChanged(EMovementMode PreviousMovementMode, uint8 PreviousCustomMode) override;
-	virtual void CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration) override;
-
-	virtual void UpdateCharacterStateBeforeMovement(float DeltaSeconds) override;
 	FVector Accelerate(FVector wishdir, float wishspeed, float accel, float DeltaTime);
 	FVector ApplyFriction(float DeltaTime);
 

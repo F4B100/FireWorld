@@ -15,5 +15,7 @@ class FIREWORLD_API UFWSaveNames : public USaveGame
 	GENERATED_BODY()
 	public:
 	UPROPERTY(BlueprintReadOnly, Category = "Save")
+	FString LastSaveLoaded;
+	UPROPERTY(BlueprintReadOnly, Category = "Save")
 	TSet<FString> SaveNames;
 };

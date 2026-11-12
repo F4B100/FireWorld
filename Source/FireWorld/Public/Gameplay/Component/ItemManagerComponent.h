@@ -38,11 +38,13 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAdded, UFWItem*, int32);
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemRemoved, UFWItem*, int32);
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemMoved, int32 /*From*/, int32 /*To*/);
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemMoved, int32 , int32 );
+	DECLARE_MULTICAST_DELEGATE(FOnInventoryLoaded);
 
 	FOnItemAdded OnItemAdded;
 	FOnItemRemoved OnItemRemoved;
 	FOnItemMoved OnItemMoved;
+	FOnInventoryLoaded OnInventoryLoaded;
 
 	UFUNCTION(BlueprintCallable)
 	void CollectItem(UFWItem *NewItem);

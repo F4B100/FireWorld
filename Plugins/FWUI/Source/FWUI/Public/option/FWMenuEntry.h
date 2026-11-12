@@ -38,7 +38,7 @@ class FWUI_API UFWMenuObject : public UObject
 	FFWEntryData Data = {};
 public:
 	UFUNCTION(BlueprintCallable)
-	FFWEntryData &GetEntryData() {return Data;}
+	const FFWEntryData &GetEntryData() const {return Data;}
 	UFUNCTION(BlueprintCallable)
 	void SetEntryData(const FFWEntryData NewData) {Data = NewData;}
 	UFUNCTION(BlueprintCallable)
