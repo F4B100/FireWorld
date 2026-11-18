@@ -398,20 +398,20 @@ void UFWGraphicsSettings::NativeConstruct()
 
 	if (GlobalGraphicsSelection)
 	{
-		for (const auto Opt : GraphicsOptionMap)
+		for (const auto& Opt : GraphicsOptionMap)
 		{
 			GlobalGraphicsSelection->AddOption({.Name = Opt, .UserData = nullptr});
 		}
 		GlobalGraphicsSelection->AddOption({.Name = TEXT("Custom"), .UserData = nullptr});
 		GlobalGraphicsSelection->OnSelectionChanged.AddUniqueDynamic(this, &UFWGraphicsSettings::SelectionChangedGlobalGraphics);
 	}
-	for (const auto Selector : GraphicsOptionSelectors)
+	for (const auto& Selector : GraphicsOptionSelectors)
 	{
-		for (const auto Opt : GraphicsOptionMap)
+		for (const auto& Opt : GraphicsOptionMap)
 		{
 			Selector->AddOption({.Name = Opt, .UserData = nullptr});
 		}	
-		Selector.Get()->OnSelectionChanged.AddUniqueDynamic(this, &UFWGraphicsSettings::SelectionChangedNonGlobal);
+		Selector.Get()->OnSelectionChanged.__Internal_AddUniqueDynamic( this, &UFWGraphicsSettings::SelectionChangedNonGlobal, FName(UE::Core::Private::TrimmedMemberFunctionName<"&UFWGraphicsSettings::SelectionChangedNonGlobal">.Str) );
 		const int32 Quality = FMath::Clamp(GetGraphicsQualitySetting(Selector), 0, GraphicsOptionMap.Num() - 1);
 		Selector->SetSelected(GraphicsOptionMap[Quality], false);
 	}
